@@ -9,7 +9,7 @@
     <meta name="author" content="Holger Koenemann">
     <meta name="generator" content="Eleventy v2.0.0">
     <meta name="HandheldFriendly" content="true">
-    <title>Klar HTML Template - Frontpage one</title>
+    <title>Capodanno</title>
     <link rel="stylesheet" href="{{ asset('assets-front') }}/css/theme.min.css">
 
     <style>
@@ -66,4 +66,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+    <style>
+        .carousel-item {
+            transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+        }
+    </style>
 </head>
