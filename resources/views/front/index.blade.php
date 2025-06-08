@@ -1,6 +1,7 @@
 @extends('front.master')
 @section('content')
     <main>
+
         <div class="w-100 overflow-hidden position-relative bg-black text-white" data-aos="fade">
             <div class="position-absolute w-100 h-100 bg-black opacity-75 top-0 start-0"></div>
             <div class="container py-vh-4 position-relative mt-5 px-vw-5 text-center">
@@ -82,8 +83,14 @@
                     <div class="col-12 col-lg-5 text-center text-lg-end" data-aos="zoom-in-right">
                         <span class="h5 fw-lighter display-4">What we charge</span>
                     </div>
-                    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                    <div id="carouselExampleFade" class="carousel slide carousel-fade w-100" data-bs-ride="carousel">
                         <div class="carousel-inner">
+                            @if (request('message'))
+                                <div id="alertMessage"
+                                    class="mt-2 text-center alert alert-{{ request('message') == 'Payment Successful!' ? 'success' : 'danger' }}">
+                                    {{ request('message') }}
+                                </div>
+                            @endif
                             @foreach ($trips->chunk(3) as $tripGroup)
                                 <!-- Group trips into sets of three -->
                                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
@@ -93,9 +100,8 @@
                                             <div class="col-sm-3 mb-4 mt-2">
                                                 <div class="bg-dark rounded-5 py-vh-3 text-center mx-2 d-flex flex-column h-100"
                                                     data-aos="zoom-in-up">
-                                                    <h2 class="display-huge mb-5">
-                                                        <span class="fs-4 me-2 fw-light">$</span>
-                                                        <span class="border-bottom border-5">{{ $trip->price }}</span>
+                                                    <h2 class="display-bolder fs-1 mb-5">
+                                                        <span class="border-bottom border-5">{{ $trip->price() }}</span>
                                                         <span class="fs-6 fw-light">/person</span>
                                                     </h2>
 
@@ -103,16 +109,25 @@
 
                                                     <ul class="lead text-secondary fs-6 text-start">
                                                         <li>Pickup: {{ $trip->pickup }}</li>
-                                                        <li>Route: {{ $trip->route }}</li>
+                                                        <li>Route: {{ $trip->routes }}</li>
                                                         <li>Transport: {{ $trip->transport }}</li>
                                                         <li>Sites: {{ $trip->sites }}</li>
                                                     </ul>
 
                                                     <!-- Cart button at the bottom -->
-                                                    <div class="mt-auto">
-                                                        <a href="#" class="btn btn-outline-light">
-                                                            <i class="bi bi-cart3 fs-4"></i> Add to Cart
-                                                        </a>
+                                                    <div
+                                                        @if ($cart && $cart->trips->contains($trip)) class="mt-auto d-flex justify-content-center mx-2" @else class="mt-auto" @endif>
+                                                        @if ($cart && $cart->trips->contains($trip))
+                                                            <a href="{{ route('front.cart.removeFromCart', $trip) }}"
+                                                                class="btn btn-outline-danger ms-3">
+                                                                <i class="bi bi-cart-x-fill me-2"></i>Remove from cart
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('front.cart.addToCart', $trip) }}"
+                                                                class="btn btn-outline-light">
+                                                                <i class="bi bi-cart3 fs-4"></i> Add to Cart
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -321,3 +336,4 @@
         });
     });
 </script>
+

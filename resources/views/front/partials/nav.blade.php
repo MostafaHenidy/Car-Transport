@@ -10,25 +10,38 @@
             </svg>
             <span class="mt-1 fw-bolder ">Capodanno</span>
         </a>
+
         <div class="demo-inline-spacing">
-            {{-- <button class="btn btn-dark" href="index.html" aria-label="Homepage">
-                Cart (0)
-            </button> --}}
+            <a class="btn btn-dark me-2" href="{{ route('front.cart.index') }}" aria-label="Homepage">
+                Cart ({{ $cart ? count($cart->trips) : 0 }})
+            </a>
             <div class="btn-group">
                 <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    Select Language
+                    <i class="bi bi-flag-fill"></i>
                 </button>
                 <ul class="dropdown-menu">
                     @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
                         <li>
-                            <a class="dropdown-item" hreflang="{{ $localeCode }}"
+                            <a class="dropdown-item me-2" hreflang="{{ $localeCode }}"
                                 href="{{ LaravelLocalization::getLocalizedURL($localeCode, route('front.index')) }}">
                                 {{ strtoupper($localeCode) }}
                             </a>
                         </li>
                     @endforeach
                 </ul>
+                @if (Route::has('login'))
+                    <div class="ms-2">
+                        @auth
+                            <form action="{{ url('/logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-light">Logout</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-light">Login</a>
+                        @endauth
+                    </div>
+                @endif
             </div>
         </div>
 </nav>

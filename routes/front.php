@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripsController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +23,25 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
     'as' => 'front.',
 ], function () {
-    Route::get('/', [TripsController::class, 'index'])->name('index');
-});
 
+    // Front page Routes 
+
+    Route::get('/', [TripsController::class, 'index'])->name('index');
+
+    // Cart page Routes 
+
+    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function () {
+        route::get('/', 'index')->name('index');
+        route::get('/addToCart/{trip:slug}', 'addToCart')->name('addToCart');
+        route::get('/removeFromCart/{trip:slug}', 'removeFromCart')->name('removeFromCart');
+    });
+
+        // Checkout page Routes 
+
+    Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
+        route::get('/', 'checkout')->middleware('auth')->name('checkout');
+        route::get('/success', 'success')->middleware('auth')->name('checkout.success');
+        route::get('/cancel', 'cancel')->middleware('auth')->name('checkout.cancel');
+    });
+});
 require __DIR__ . '/auth.php';
