@@ -1,4 +1,4 @@
-<nav id="navScroll" class="navbar navbar-dark bg-black fixed-top px-vw-5" tabindex="0">
+<nav id="navScroll" class="navbar navbar-dark bg-black fixed-top px-vw-5 mb-4" tabindex="0">
     <div class="container">
         <a class="navbar-brand pe-md-4 fs-4 col-12 col-md-auto text-center" href="{{ route('front.index') }}">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-stack"
@@ -11,8 +11,9 @@
             <span class="mt-1 fw-bolder ">Capodanno</span>
         </a>
 
-        <div class="demo-inline-spacing">
-            <a class="btn btn-dark me-2" href="{{ route('front.cart.index') }}" aria-label="Homepage">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            {{-- Cart Button --}}
+            <a class="btn btn-dark" href="{{ route('front.cart.index') }}" aria-label="Cart">
                 Cart ({{ $cart ? count($cart->trips) : 0 }})
             </a>
             <div class="btn-group">
@@ -30,18 +31,19 @@
                         </li>
                     @endforeach
                 </ul>
-                @if (Route::has('login'))
-                    <div class="ms-2">
-                        @auth
-                            <form action="{{ url('/logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-light">Logout</button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="btn btn-light">Login</a>
-                        @endauth
-                    </div>
-                @endif
             </div>
+            {{-- Login/Logout Button --}}
+            @if (Route::has('login'))
+                @auth
+                    <form id="logoutForm" action="{{ url('/logout') }}" method="POST" class="m-0">
+                        @csrf
+                        <button class="btn btn-light" type="submit">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-light">Login</a>
+                @endauth
+            @endif
+
         </div>
+    </div>
 </nav>
