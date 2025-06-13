@@ -38,18 +38,32 @@ Route::group([
 
     // Checkout page Routes 
 
-    Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
-        route::get('/', 'checkout')->middleware('auth')->name('checkout');
-        route::get('/success', 'success')->middleware('auth')->name('checkout.success');
-        route::get('/cancel', 'cancel')->middleware('auth')->name('checkout.cancel');
-    });
+    Route::group(
+        [
+            'middleware' => ['auth', 'verified'],
+            'prefix' => 'checkout',
+            'as' => 'checkout.'
+        ],
+        function () {
+            Route::controller(CheckoutController::class)->group(function () {
+                route::get('/', 'checkout')->name('checkout');
+                route::get('/success', 'success')->name('checkout.success');
+                route::get('/cancel', 'cancel')->name('checkout.cancel');
+            });
+        }
+    );
     //Notifications Modal Routes
-    Route::controller(Controller::class)->middleware('auth')->name('notifications.')->group(function () {
-        route::get('/markAsRead/{notification_id}', 'markAsRead')->name('markAsRead');
-        route::get('/clearAll', 'clearAll')->name('clearAll');
-    });
-
-
-    // Route::view('/reset', 'customAuth.reset-password');
+    Route::group(
+        [
+            'middleware' => ['auth', 'verified'],
+            'as' => 'notifications.'
+        ],
+        function () {
+            Route::controller(Controller::class)->group(function () {
+                route::get('/markAsRead/{notification_id}', 'markAsRead')->name('markAsRead');
+                route::get('/clearAll', 'clearAll')->name('clearAll');
+            });
+        }
+    );
 });
 require __DIR__ . '/auth.php';

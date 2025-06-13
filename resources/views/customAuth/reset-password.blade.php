@@ -1,97 +1,45 @@
-<!doctype html>
-<html class="h-100" lang="en">
+@extends('customAuth.master')
+@section('title', 'Reset your password')
+@section('content')
+    <main class="mb-auto col-12">
+        <h1>Reset your <br>password</h1>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="description" content="A well made and handcrafted Bootstrap 5 template">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets-front') }}/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets-front') }}/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets-front') }}/img/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets-front') }}/img/favicon.png">
-    <meta name="author" content="Holger Koenemann">
-    <meta name="generator" content="Eleventy v2.0.0">
-    <meta name="HandheldFriendly" content="true">
-    <title>Reset your Password</title>
-    <link rel="stylesheet" href="{{ asset('assets-front') }}/css/theme.min.css">
-    <style>
-        #loginLink:hover {
-            color: white;
-        }
-    </style>
+        <form method="POST" action="{{ route('password.store') }}">
+            @csrf
+            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <div class="col-12">
+                {{-- Email --}}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control form-control-lg bg-gray-800 border-dark" id="email"
+                        aria-describedby="emailHelp" name="email" :value="old('email')" required autocomplete="username">
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                    </div>
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+                {{-- Password --}}
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" required autocomplete="new-password"
+                        class="form-control form-control-lg bg-gray-800 border-dark" id="exampleInputPassword1">
+                </div>
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                {{-- Password Confirmation --}}
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label">Confirm Password</label>
+                    <input type="password" name="password_confirmation" required autocomplete="new-password"
+                        class="form-control form-control-lg bg-gray-800 border-dark" id="exampleInputPassword1">
+                </div>
+                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 
-</head>
-
-<body class="d-flex h-100 w-100 bg-black text-white" data-bs-spy="scroll" data-bs-target="#navScroll">
-
-    <div class="h-100 container-fluid">
-        <div class="h-100 row d-flex align-items-stretch">
-
-            <div class="col-12 col-md-7 col-lg-6 col-xl-5 d-flex align-items-start flex-column px-vw-5">
-
-                <header class="mb-auto py-vh-2 col-12">
-                    <a class="navbar-brand pe-md-4 fs-4 col-12 col-md-auto text-center" href="index.html">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="bi bi-stack" viewBox="0 0 16 16">
-                            <path
-                                d="m14.12 10.163 1.715.858c.22.11.22.424 0 .534L8.267 15.34a.598.598 0 0 1-.534 0L.165 11.555a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.66zM7.733.063a.598.598 0 0 1 .534 0l7.568 3.784a.3.3 0 0 1 0 .535L8.267 8.165a.598.598 0 0 1-.534 0L.165 4.382a.299.299 0 0 1 0-.535L7.733.063z" />
-                            <path
-                                d="m14.12 6.576 1.715.858c.22.11.22.424 0 .534l-7.568 3.784a.598.598 0 0 1-.534 0L.165 7.968a.299.299 0 0 1 0-.534l1.716-.858 5.317 2.659c.505.252 1.1.252 1.604 0l5.317-2.659z" />
-                        </svg>
-                        <span class="ms-md-1 mt-1 fw-bolder me-md-5">Capodanno</span>
-                    </a>
-
-                </header>
-                <main class="mb-auto col-12">
-                    <h1>Reset your <br>password</h1>
-
-                    <form method="POST" action="{{ route('password.store') }}">
-                        @csrf
-                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-                        <div class="col-12">
-                            {{-- Email --}}
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email address</label>
-                                <input type="email" class="form-control form-control-lg bg-gray-800 border-dark"
-                                    id="email" aria-describedby="emailHelp" name="email" :value="old('email')"
-                                    required autocomplete="username">
-                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
-                                </div>
-                                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                            </div>
-                            {{-- Password --}}
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" required autocomplete="new-password"
-                                    class="form-control form-control-lg bg-gray-800 border-dark"
-                                    id="exampleInputPassword1">
-                            </div>
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                            {{-- Password Confirmation --}}
-                            <div class="mb-3">
-                                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                <input type="password" name="password_confirmation" required autocomplete="new-password"
-                                    class="form-control form-control-lg bg-gray-800 border-dark"
-                                    id="exampleInputPassword1">
-                            </div>
-                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-
-                            <div class="d-flex align-items-center">
-                                <button type="submit" class="btn btn-white btn-xl mb-4">Submit</button>
-                                <a id="loginLink" href="{{ route('login') }}" class="form-text ms-5 mb-4">Already have
-                                    an account ?</a>
-                            </div>
-                        </div>
-                    </form>
-
-                </main>
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-white btn-xl mb-4">Submit</button>
+                    <a id="loginLink" href="{{ route('login') }}" class="form-text ms-5 mb-4">Already have
+                        an account ?</a>
+                </div>
             </div>
+        </form>
 
-            <div class="col-12 col-md-5 col-lg-6 col-xl-7 gradient"></div>
+    </main>
+@endsection
 
-        </div>
-
-    </div>
-</body>
-
-</html>
