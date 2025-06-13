@@ -12,10 +12,10 @@
     <meta name="author" content="Holger Koenemann">
     <meta name="generator" content="Eleventy v2.0.0">
     <meta name="HandheldFriendly" content="true">
-    <title>Login to your account</title>
+    <title>Reset your Password</title>
     <link rel="stylesheet" href="{{ asset('assets-front') }}/css/theme.min.css">
     <style>
-        #registerLink:hover {
+        #loginLink:hover {
             color: white;
         }
     </style>
@@ -43,10 +43,11 @@
 
                 </header>
                 <main class="mb-auto col-12">
-                    <h1>Login to <br>your account</h1>
-                    <x-auth-session-status class="mb-4" :status="session('status')" />
-                    <form method="POST" action="{{ route('login') }}">
+                    <h1>Reset your <br>password</h1>
+
+                    <form method="POST" action="{{ route('password.store') }}">
                         @csrf
+                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
                         <div class="col-12">
                             {{-- Email --}}
                             <div class="mb-3">
@@ -54,6 +55,8 @@
                                 <input type="email" class="form-control form-control-lg bg-gray-800 border-dark"
                                     id="email" aria-describedby="emailHelp" name="email" :value="old('email')"
                                     required autocomplete="username">
+                                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                </div>
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
                             {{-- Password --}}
@@ -64,14 +67,19 @@
                                     id="exampleInputPassword1">
                             </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                            {{-- Password Reset Link --}}
-                            <a id="registerLink" href="{{ route('password.request') }}" class="form-text">
-                                Forgot Password ?</a>
+                            {{-- Password Confirmation --}}
+                            <div class="mb-3">
+                                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                <input type="password" name="password_confirmation" required autocomplete="new-password"
+                                    class="form-control form-control-lg bg-gray-800 border-dark"
+                                    id="exampleInputPassword1">
+                            </div>
+                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 
-                            <div class="d-flex align-items-center mt-3">
+                            <div class="d-flex align-items-center">
                                 <button type="submit" class="btn btn-white btn-xl mb-4">Submit</button>
-                                <a id="registerLink" href="{{ route('register') }}" class="form-text ms-5 mb-4">Don't
-                                    have an account ?</a>
+                                <a id="loginLink" href="{{ route('login') }}" class="form-text ms-5 mb-4">Already have
+                                    an account ?</a>
                             </div>
                         </div>
                     </form>
@@ -85,6 +93,5 @@
 
     </div>
 </body>
-
 
 </html>

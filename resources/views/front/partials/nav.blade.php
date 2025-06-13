@@ -12,6 +12,17 @@
         </a>
 
         <div class="d-flex align-items-center gap-2 flex-wrap">
+
+            <!-- Button trigger modal -->
+            <button id="notificationsIcon" type="button" class="btn bg-transparent text-light" data-bs-toggle="modal"
+                data-bs-target="#modalScrollable">
+                @if (Auth::check() && Auth::user()->unreadNotifications->count() > 0)
+                    <i class="bi bi-bell-fill"></i>
+                    <small class="text-secondary">{{ Auth::user()->unreadNotifications->count() }}</small>
+                @else
+                    <i class="bi bi-bell"></i>
+                @endif
+            </button>
             {{-- Cart Button --}}
             <a class="btn btn-dark" href="{{ route('front.cart.index') }}" aria-label="Cart">
                 Cart ({{ $cart ? count($cart->trips) : 0 }})

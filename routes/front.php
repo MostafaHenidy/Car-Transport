@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\TripsController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -36,12 +36,20 @@ Route::group([
         route::get('/removeFromCart/{trip:slug}', 'removeFromCart')->name('removeFromCart');
     });
 
-        // Checkout page Routes 
+    // Checkout page Routes 
 
     Route::controller(CheckoutController::class)->prefix('checkout')->name('checkout.')->group(function () {
         route::get('/', 'checkout')->middleware('auth')->name('checkout');
         route::get('/success', 'success')->middleware('auth')->name('checkout.success');
         route::get('/cancel', 'cancel')->middleware('auth')->name('checkout.cancel');
     });
+    //Notifications Modal Routes
+    Route::controller(Controller::class)->middleware('auth')->name('notifications.')->group(function () {
+        route::get('/markAsRead/{notification_id}', 'markAsRead')->name('markAsRead');
+        route::get('/clearAll', 'clearAll')->name('clearAll');
+    });
+
+
+    // Route::view('/reset', 'customAuth.reset-password');
 });
 require __DIR__ . '/auth.php';

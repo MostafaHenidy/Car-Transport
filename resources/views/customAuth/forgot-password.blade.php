@@ -12,7 +12,7 @@
     <meta name="author" content="Holger Koenemann">
     <meta name="generator" content="Eleventy v2.0.0">
     <meta name="HandheldFriendly" content="true">
-    <title>Login to your account</title>
+    <title>Forgot your password</title>
     <link rel="stylesheet" href="{{ asset('assets-front') }}/css/theme.min.css">
     <style>
         #registerLink:hover {
@@ -43,9 +43,12 @@
 
                 </header>
                 <main class="mb-auto col-12">
-                    <h1>Login to <br>your account</h1>
+                    <h3>Forgot your password? </h3>
+                    <br>
+                    <p>No problem. Just let us know your email address and we will email you
+                        a password reset link that will allow you to choose a new one.</p>
                     <x-auth-session-status class="mb-4" :status="session('status')" />
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('password.email') }}">
                         @csrf
                         <div class="col-12">
                             {{-- Email --}}
@@ -56,17 +59,6 @@
                                     required autocomplete="username">
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
-                            {{-- Password --}}
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" name="password" required autocomplete="new-password"
-                                    class="form-control form-control-lg bg-gray-800 border-dark"
-                                    id="exampleInputPassword1">
-                            </div>
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                            {{-- Password Reset Link --}}
-                            <a id="registerLink" href="{{ route('password.request') }}" class="form-text">
-                                Forgot Password ?</a>
 
                             <div class="d-flex align-items-center mt-3">
                                 <button type="submit" class="btn btn-white btn-xl mb-4">Submit</button>

@@ -85,12 +85,6 @@
                     </div>
                     <div id="carouselExampleFade" class="carousel slide carousel-fade w-100" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            @if (request('message'))
-                                <div id="alertMessage"
-                                    class="mt-2 text-center alert alert-{{ request('message') == 'Payment Successful!' ? 'success' : 'danger' }}">
-                                    {{ request('message') }}
-                                </div>
-                            @endif
                             @foreach ($trips->chunk(3) as $tripGroup)
                                 <!-- Group trips into sets of three -->
                                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
@@ -336,4 +330,3 @@
         });
     });
 </script>
-

@@ -63,8 +63,6 @@
             /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
         }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
     <style>
@@ -72,5 +70,10 @@
             transition: transform 1s ease-in-out, opacity 1s ease-in-out;
         }
     </style>
-    <link rel="stylesheet" href="/resources/css/sidebar.css">
+    <style>
+        .notification-card {
+            transition: background-color 0.5s ease;
+        }
+    </style>
+
 </head>

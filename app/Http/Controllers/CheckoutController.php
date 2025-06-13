@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Notifications\OrderCancelNotification;
+use App\Notifications\OrderCreateNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,12 +34,17 @@ class CheckoutController extends Controller
                 'user_id' => $request->user()->id,
             ]);
             $order->trips()->attach($cart->trips->pluck('id')->toArray());
+            $user = $request->user();
             $cart->delete();
-            return redirect()->route('front.index', ['message' => 'Order Placed!']);
+            $user->notify(new OrderCreateNotification($user));
+            return redirect()->route('front.index');
         }
     }
     public function cancel(Request $request)
     {
         $session = $request->user()->stripe()->checkout->sessions->retrieve($request->get('session_id'));
+        $user = $request->user();
+        $user->notify(new OrderCancelNotification($user));
+        return redirect()->route('front.index');
     }
 }
