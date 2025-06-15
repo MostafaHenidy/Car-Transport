@@ -75,5 +75,4 @@
             transition: background-color 0.5s ease;
         }
     </style>
-
 </head>

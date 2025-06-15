@@ -7,7 +7,11 @@
     @yield('content')
     @include('front.partials.notificationModal')
     @include('front.partials.footer')
-
+    <div class="sticky-bottom float-end">
+        <a href="{{ route('front.ticket.index') }}" class="btn btn-outline-dark text-light rounded-circle mb-4 me-4">
+            <i class="bi bi-headset fs-3"></i>
+        </a>
+    </div>
     @include('front.partials.scripts')
 </body>
 

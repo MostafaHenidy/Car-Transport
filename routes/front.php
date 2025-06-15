@@ -3,6 +3,7 @@
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\TripsController;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -62,6 +63,20 @@ Route::group([
             Route::controller(Controller::class)->group(function () {
                 route::get('/markAsRead/{notification_id}', 'markAsRead')->name('markAsRead');
                 route::get('/clearAll', 'clearAll')->name('clearAll');
+            });
+        }
+    );
+    // Support Tickets Pages
+    Route::group(
+        [
+            'middleware' => ['auth', 'verified'],
+            'as' => 'ticket.',
+        ],
+        function () {
+            Route::controller(SupportTicketController::class)->group(function () {
+                route::get('/submitTicket', 'index')->name('index');
+                route::post('/submitTicket', 'store')->name('store');
+                route::get('/submitTicket/myTickets', 'myTickets')->name('myTickets');
             });
         }
     );

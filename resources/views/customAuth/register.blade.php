@@ -7,13 +7,24 @@
         <form method="POST" action="{{ route('register') }}">
             @csrf
             <div class="col-12">
+                {{-- Name --}}
                 <div class="mb-3">
-                    {{-- Name --}}
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control form-control-lg bg-gray-800 border-dark" id="name"
                         aria-describedby="emailHelp" name="name"required autofocus autocomplete="name">
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
+                {{-- phone --}}
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control form-control-lg bg-gray-800 border-dark text-white"
+                        name="phone" required aria-describedby="phoneHelp">
+                    <div id="phoneHelp" class="form-text">
+                        Please start with your country code. Example: +20 for Egypt.
+                    </div>
+                    <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                </div>
+
                 {{-- Email --}}
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>

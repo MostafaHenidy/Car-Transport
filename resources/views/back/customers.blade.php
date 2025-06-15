@@ -1,4 +1,4 @@
-@extends('front.master')
+@extends('back.master')
 @section('support-active', 'active')
 @section('content')
     <div class="container pt-5 mt-5">

@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'phone',
     ];
 
     /**
@@ -48,5 +49,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function order()
     {
         return $this->belongsToMany(order::class);
+    }
+    public function supportTicket()
+    {
+        return $this->hasMany(supportTicket::class);
     }
 }

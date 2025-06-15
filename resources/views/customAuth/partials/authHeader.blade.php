@@ -9,5 +9,4 @@
         </svg>
         <span class="ms-md-1 mt-1 fw-bolder me-md-5">Capodanno</span>
     </a>
-
 </header>

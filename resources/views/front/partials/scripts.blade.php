@@ -76,6 +76,7 @@
         });
     });
 </script>
+{{-- mark the notifications as read in the navbar modal --}}
 <script>
     $(document).on('click', '.single-read-btn', function(e) {
         e.preventDefault();
@@ -96,5 +97,53 @@
                 alert('Could not mark as read.');
             }
         });
+    });
+</script>
+{{-- carousel changing in the front page --}}
+<script>
+    $(document).ready(function() {
+        $(".owl-carousel").owlCarousel({
+            loop: true,
+            margin: 20,
+            nav: true,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                768: {
+                    items: 2
+                },
+                992: {
+                    items: 3
+                }
+            }
+        });
+    });
+</script>
+{{-- Progress bar increament in the support page --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const subjectList = document.getElementById('subjectList');
+        const messageBox = document.getElementById('messageBox');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress() {
+            let progress = 25;
+
+            if (subjectList.value !== '') {
+                progress = 50;
+            }
+
+            if (subjectList.value !== '' && messageBox.value.trim() !== '') {
+                progress = 100;
+            }
+
+            progressBar.style.width = progress + '%';
+            progressBar.innerText = progress === 100 ? 'Complete' : 'Describe a problem';
+        }
+
+        subjectList.addEventListener('change', updateProgress);
+        messageBox.addEventListener('input', updateProgress);
     });
 </script>

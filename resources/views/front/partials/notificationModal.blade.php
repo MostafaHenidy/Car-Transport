@@ -15,8 +15,12 @@
                                 <div class="d-flex align-items-start">
                                     @if ($notification->data['message'] == 'Order Placed!')
                                         <i class="bi bi-cart-check-fill fs-3 text-light"></i>
-                                    @else
+                                    @elseif ($notification->data['message'] == 'Ticket Submitted an agent will contact you in the next 24h.')
+                                        <i class="bi bi-headset fs-3 text-light"></i>
+                                    @elseif ($notification->data['message'] == 'Order Canceled!')
                                         <i class="bi bi-cart-x-fill fs-3 text-light"></i>
+                                    @else
+                                        <i class="bi bi-journal-check fs-3 text-light"></i>
                                     @endif
                                     <div class="ms-3">
                                         <h6 class="mb-1">{{ $notification->data['message'] }}</h6>
