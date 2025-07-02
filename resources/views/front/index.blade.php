@@ -77,235 +77,159 @@
             </div>
         </div>
 
-        <div class="bg-black">
-            <div class="container px-vw-5 py-vh-5">
-                <div class=" row d-flex align-items-center">
-                    <div class="col-12 col-lg-5 text-center text-lg-end" data-aos="zoom-in-right">
-                        <span class="h5 fw-lighter display-4">What we charge</span>
-                    </div>
-                    <div id="carouselExampleFade" class="carousel slide carousel-fade w-100" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            @foreach ($trips->chunk(3) as $tripGroup)
-                                <!-- Group trips into sets of three -->
-                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                    <!-- First slide is active -->
-                                    <div class="row justify-content-center mt-1 ">
-                                        @foreach ($tripGroup as $trip)
-                                            <div class="col-sm-3 mb-4 mt-2">
-                                                <div class="bg-dark rounded-5 py-vh-3 text-center mx-2 d-flex flex-column h-100"
-                                                    data-aos="zoom-in-up">
-                                                    <h2 class="display-bolder fs-1 mb-5">
-                                                        <span class="border-bottom border-5">{{ $trip->price() }}</span>
-                                                        <span class="fs-6 fw-light">/person</span>
-                                                    </h2>
+        <div class="bg-black py-5 my-5">
+            <div class="container">
+                <h2 class="text-center text-white mb-5">What we charge</h2>
 
-                                                    <p class="lead text-secondary">{{ $trip->name }}</p>
+                <div class="trip-cards-scroll">
+                    @foreach ($trips as $trip)
+                        <div class="trip-card p-4 d-flex flex-column">
+                            <h3 class="text-center fs-3">
+                                {{ $trip->price() }}
+                                <small class="fs-6 fw-light d-block mt-1">/person</small>
+                            </h3>
 
-                                                    <ul class="lead text-secondary fs-6 text-start">
-                                                        <li>Pickup: {{ $trip->pickup }}</li>
-                                                        <li>Route: {{ $trip->routes }}</li>
-                                                        <li>Transport: {{ $trip->transport }}</li>
-                                                        <li>Sites: {{ $trip->sites }}</li>
-                                                    </ul>
+                            <p class="text-secondary text-center trimmed-text">{{ $trip->name }}</p>
 
-                                                    <!-- Cart button at the bottom -->
-                                                    <div
-                                                        @if ($cart && $cart->trips->contains($trip)) class="mt-auto d-flex justify-content-center mx-2" @else class="mt-auto" @endif>
-                                                        @if ($cart && $cart->trips->contains($trip))
-                                                            <a href="{{ route('front.cart.removeFromCart', $trip) }}"
-                                                                class="btn btn-outline-danger ms-3">
-                                                                <i class="bi bi-cart-x-fill me-2"></i>Remove from cart
-                                                            </a>
-                                                        @else
-                                                            <a href="{{ route('front.cart.addToCart', $trip) }}"
-                                                                class="btn btn-outline-light">
-                                                                <i class="bi bi-cart3 fs-4"></i> Add to Cart
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endforeach
+                            <ul class="fs-6 text-secondary mb-4">
+                                <li class="d-flex"><strong>Pickup:</strong> <span
+                                        class="trimmed-text ms-2">{{ $trip->pickup }}</span></li>
+                                <li><strong>Route:</strong> {{ $trip->routes }}</li>
+                                <li><strong>Transport:</strong> {{ $trip->transport }}
+                                </li>
+                                <li><strong>Sites:</strong> {{ $trip->sites }} </li>
+                                {{-- <span class="trimmed-text"></span> --}}
+                            </ul>
+
+                            <!-- Push button to the bottom -->
+                            <div class="mt-auto text-center">
+                                @if ($cart && $cart->trips->contains($trip))
+                                    <a href="{{ route('front.cart.removeFromCart', $trip) }}"
+                                        class="btn btn-outline-danger w-100">
+                                        <i class="bi bi-cart-x-fill me-2"></i>Remove
+                                    </a>
+                                @else
+                                    <a href="{{ route('front.cart.addToCart', $trip) }}"
+                                        class="btn btn-outline-light w-100">
+                                        <i class="bi bi-cart3 me-2"></i>Add to Cart
+                                    </a>
+                                @endif
+                            </div>
                         </div>
-
-                        <!-- Controls -->
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        </button>
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
-
         </div>
+
+        @if (Auth::user())
+            <div class="container-fluid px-vw-5 position-relative" data-aos="fade">
+                <div class="position-absolute w-100 h-50 bg-black top-0 start-0"></div>
+
+                <div class="position-relative py-vh-5 bg-cover bg-center rounded-5"
+                    style="background-image: url({{ asset('assets-front') }}/img/webp/abstract12.webp)">
+                    <div class="container bg-black px-vw-5 py-vh-3 rounded-5 shadow">
+
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-lg-8 col-xl-6">
+                                <div class="rounded-5 bg-dark p-5 shadow" data-aos="zoom-in-up">
+                                    <h2 class="text-white text-center mb-4">Leave a Review</h2>
+
+                                    <form action="{{ route('front.review.storeReview') }}" method="POST"
+                                        class="text-white">
+                                        @csrf
+                                        <input type="hidden" class="form-control bg-black text-white border-secondary"
+                                            id="name" name="name" value="{{ Auth::user()->name }}" required>
+
+                                        <!-- Star Rating -->
+                                        <div class="mb-4 text-center">
+                                            <div class="rating" id="starRating">
+                                                <input type="hidden" id="ratingValue" name="rating" value="0">
+                                                @for ($i = 5; $i >= 1; $i--)
+                                                    <i class="bi bi-star star-icon fs-2"
+                                                        data-value="{{ $i }}"></i>
+                                                @endfor
+                                            </div>
+                                            <div id="ratingText" class="small text-light mt-2">Select rating</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="review" class="form-label">Your Review</label>
+                                            <textarea class="form-control bg-black text-white border-secondary" id="review" name="review" rows="4"
+                                                required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-outline-light w-100">Submit Review</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="container-fluid px-vw-5 position-relative" data-aos="fade">
+                <div class="position-absolute w-100 h-50 bg-black top-0 start-0"></div>
+
+                <div class="position-relative py-vh-5 bg-cover bg-center rounded-5"
+                    style="background-image: url({{ asset('assets-front') }}/img/webp/abstract12.webp)">
+                    <div class="container bg-black px-vw-5 py-vh-3 rounded-5 shadow">
+
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-lg-8 col-xl-6">
+                                <div class="rounded-5 bg-dark p-5 shadow" data-aos="zoom-in-up">
+                                    <div class="row">
+                                        <h2 class="text-white text-center mb-4">Sign in to leave a Review</h2>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{{ route('login') }}" class="btn btn-light me-3">Login</a>
+                                        <a href="{{ route('register') }}" class="btn btn-light ms-3">Register</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
+
+
 
         <div class="bg-dark py-vh-5">
             <div class="container px-vw-5">
                 <div class="row d-flex gx-5 align-items-center">
                     <div class="col-12 col-lg-6">
-                        <div class="rounded-5 bg-black p-5 shadow" data-aos="zoom-in-right">
-                            <div class="fs-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-                            </div>
-                            <p class="text-secondary lead">"Lorem ipsum dolor sit amet, consectetur tempor incididunt
-                                ut labore et dolore magna aliqua ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat."</p>
-                            <div class="d-flex justify-content-start align-items-center border-top border-secondary pt-3">
-                                <img src="{{ asset('assets-front') }}/img/webp/person14.webp" width="96"
-                                    height="96" class="rounded-circle me-3" alt="a nice person" data-aos="fade"
-                                    loading="lazy">
-                                <div>
-                                    <span class="h6 fw-5">Jane Doemunsky</span><br>
-                                    <small class="text-secondary">COO, The Boo Corp.</small>
+                        @foreach ($reviews as $review)
+                            <div class="rounded-5 bg-black p-5 shadow mb-3" data-aos="zoom-in-right">
+                                @for ($i = 0; $i < $review->rating; $i++)
+                                    <i class="bi bi-star-fill"></i>
+                                @endfor
+                                <p class="text-secondary lead">"{{ $review->review }}"</p>
+                                <div
+                                    class="d-flex justify-content-start align-items-center border-top border-secondary pt-3">
+                                    {{-- <img src="{{ asset('assets-front') }}/img/webp/person14.webp" width="96"
+                                        height="96" class="rounded-circle me-3" alt="a nice person" data-aos="fade"
+                                        loading="lazy"> --}}
+                                    <div>
+                                        <span class="h6 fw-5">{{ $review->name }}</span><br>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="rounded-5 bg-black p-5 shadow mt-5" data-aos="zoom-in-right">
-                            <div class="fs-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-half" viewBox="0 0 16 16">
-                                    <path
-                                        d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z" />
-                                </svg>
-
-                            </div>
-                            <p class="text-secondary lead">"Lorem ipsum dolor sit amet, consectetur tempor incididunt
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam. quis nostrud exercitation
-                                ullamco laboris nisi ut aliquip ex ea commodo consequat."</p>
-                            <div class="d-flex justify-content-start align-items-center border-top border-secondary pt-3">
-                                <img src="{{ asset('assets-front') }}/img/webp/person13.webp" width="96"
-                                    height="96" class="rounded-circle me-3" alt="a nice person" data-aos="fade"
-                                    loading="lazy">
-                                <div>
-                                    <span class="h6 fw-5">Jane Doemunsky</span><br>
-                                    <small class="text-secondary">COO, The Boo Corp.</small>
-                                </div>
-                            </div>
-                        </div>
-
+                        @endforeach
                     </div>
                     <div class="col-12 col-lg-6">
                         <div class="p-5 pt-0" data-aos="fade">
                             <span class="h5 text-secondary fw-lighter">What others have to say</span>
-                            <h2 class="display-4">See what our customers say about their experience with Car Transport.
+                            <h2 class="display-4">See what our customers say about their experience with
+                                <strong>Capodanno</strong>.
                             </h2>
-                        </div>
-                        <div class="rounded-5 bg-black p-5 shadow mt-5 gradient" data-aos="zoom-in-left">
-                            <div class="fs-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                </svg>
-
-
-                            </div>
-                            <p class="lead">"Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                laboris nisi ut aliquip ex ea commodo consequat."</p>
-                            <div class="d-flex justify-content-start align-items-center border-top pt-3">
-                                <img src="{{ asset('assets-front') }}/img/webp/person16.webp" width="96"
-                                    height="96" class="rounded-circle me-3" alt="a nice person" data-aos="fade"
-                                    loading="lazy">
-                                <div>
-                                    <span class="h6 fw-5">Jane Doemunsky</span><br>
-                                    <small>COO, The Boo Corp.</small>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
-        
+
     </main>
 @endsection

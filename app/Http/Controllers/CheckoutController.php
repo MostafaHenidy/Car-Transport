@@ -11,19 +11,64 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
-    public function checkout()
+    // public function checkout()
+    // {
+    //     $cart = Cart::session()->first();
+    //     if ($cart) {
+    //         $prices = $cart->trips->pluck('strip_price_id')->toArray();
+    //         return Auth::user()->checkout($prices, [
+    //             'success_url' => route('front.checkout.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+    //             'cancel_url' => route('front.checkout.checkout.cancel') . '?session_id={CHECKOUT_SESSION_ID}',
+    //             'metadata' => [
+    //                 'cart_id' => $cart->id,
+    //             ],
+    //             "allow_promotion_codes" => true,
+
+    //         ]);
+    //     }
+    // }
+    // public function checkoutNonStripe()
+    // {
+    //     $cart = Cart::session()->first();
+    //     $amount = $cart->trips->sum('price');
+
+    //     return Auth::user()->checkoutCharge($amount, 'Trips bundle', 1, [
+    //         'success_url' => route('front.checkout.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+    //         'cancel_url' => route('front.checkout.checkout.cancel') . '?session_id={CHECKOUT_SESSION_ID}',
+    //         'metadata' => [
+    //             'cart_id' => $cart->id,
+    //         ],
+    //         "allow_promotion_codes" => true,
+    //     ]);
+    // }
+    public function checkoutLineItems()
     {
         $cart = Cart::session()->first();
-        if ($cart) {
-            $prices = $cart->trips->pluck('strip_price_id')->toArray();
-            return Auth::user()->checkout($prices, [
-                'success_url' => route('front.checkout.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('front.checkout.checkout.cancel') . '?session_id={CHECKOUT_SESSION_ID}',
-                'metadata' => [
-                    'cart_id' => $cart->id,
+        $trips = $cart->trips()->get()->map(function ($trip) {
+            return [
+                'price_data' => [
+                    'currency' => env('CASHIER_CURRENCY'),
+                    'product_data' => ['name' => $trip->name],
+                    'unit_amount' =>  $trip->price,
+                    'tax_behavior' => 'exclusive',
                 ],
-            ]);
-        }
+                'adjustable_quantity' => [
+                    'enabled' => true,
+                    'minimum' => 1,
+                    'maximum' => 10,
+                ],
+                'quantity' => 1,
+            ];
+        })->toArray();
+        return Auth::user()->checkout(null, [
+            'success_url' => route('front.checkout.checkout.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('front.checkout.checkout.cancel') . '?session_id={CHECKOUT_SESSION_ID}',
+            'metadata' => [
+                'cart_id' => $cart->id,
+            ],
+            "allow_promotion_codes" => true,
+            'line_items' => $trips,
+        ]);
     }
     public function success(Request $request)
     {

@@ -1,4 +1,5 @@
 @extends('back.master')
+@section('orders-active','active')
 @section('content')
     <div class="card bg-dark text-white mb-4">
         <div class="card-header">

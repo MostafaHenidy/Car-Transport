@@ -1,5 +1,5 @@
 @extends('back.master')
-
+@section('dashboard-active','active')
 @section('content')
     <div class="container-fluid py-4">
         <!-- Dashboard Summary Cards -->

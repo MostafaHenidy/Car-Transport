@@ -1,1 +1,29 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).on('click', '.single-approve-btn', function(e) {
+        e.preventDefault();
+
+        let button = $(this);
+        let reviewId = button.data('id');
+        let row = button.closest('tr');
+
+        $.ajax({
+            type: 'PATCH',
+            url: '{{ route('admin.reviews.approveReview', ':id') }}'.replace(':id', reviewId),
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                row.find('.review-card')
+                    .removeClass('bg-danger')
+                    .addClass('bg-success')
+                    .text('Approved');
+                button.html('<i class="bi bi-check-all"></i>');
+            },
+            error: function() {
+                alert('Could not approve this review.');
+            }
+        });
+    });
+</script>

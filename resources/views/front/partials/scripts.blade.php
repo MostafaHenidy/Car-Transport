@@ -99,51 +99,112 @@
         });
     });
 </script>
-{{-- carousel changing in the front page --}}
-<script>
-    $(document).ready(function() {
-        $(".owl-carousel").owlCarousel({
-            loop: true,
-            margin: 20,
-            nav: true,
-            dots: false,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                768: {
-                    items: 2
-                },
-                992: {
-                    items: 3
-                }
-            }
-        });
-    });
-</script>
 {{-- Progress bar increament in the support page --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const subjectList = document.getElementById('subjectList');
-        const messageBox = document.getElementById('messageBox');
+        const subjectSelect = document.getElementById('subject');
+        const messageTextarea = document.getElementById('message');
         const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
 
         function updateProgress() {
-            let progress = 25;
+            let progress = 25; // Default starting at 25%
+            let text = "Login";
+            let color = "#6c757d"; // Gray
 
-            if (subjectList.value !== '') {
+            if (subjectSelect.value !== '') {
                 progress = 50;
+                text = "Describe your problem";
+                color = "#ffc107"; // Yellow
             }
 
-            if (subjectList.value !== '' && messageBox.value.trim() !== '') {
+            if (subjectSelect.value !== '' && messageTextarea.value.trim() !== '') {
                 progress = 100;
+                text = "Complete";
+                color = "#28a745"; // Green
             }
 
             progressBar.style.width = progress + '%';
-            progressBar.innerText = progress === 100 ? 'Complete' : 'Describe a problem';
+            progressBar.style.backgroundColor = color;
+            progressBar.setAttribute('aria-valuenow', progress);
+            progressText.textContent = text;
         }
 
-        subjectList.addEventListener('change', updateProgress);
-        messageBox.addEventListener('input', updateProgress);
+        // Initial update
+        updateProgress();
+
+        // Event listeners
+        subjectSelect.addEventListener('change', updateProgress);
+        messageTextarea.addEventListener('input', updateProgress);
+    });
+</script>
+{{-- Reviews stars --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const stars = document.querySelectorAll('.star-icon');
+        const ratingInput = document.getElementById('ratingValue');
+        const ratingText = document.getElementById('ratingText');
+
+        stars.forEach(star => {
+            // Hover effect
+            star.addEventListener('mouseover', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                highlightStars(value);
+            });
+
+            // Click to select rating
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                ratingInput.value = value;
+                updateRatingText(value);
+                setActiveStars(value);
+            });
+
+            // Reset to selected rating when mouse leaves
+            document.getElementById('starRating').addEventListener('mouseleave', function() {
+                const currentRating = parseInt(ratingInput.value);
+                setActiveStars(currentRating);
+            });
+        });
+
+        function highlightStars(value) {
+            stars.forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-value'));
+                if (starValue <= value) {
+                    star.classList.add('bi-star-fill');
+                    star.classList.remove('bi-star');
+                } else {
+                    star.classList.add('bi-star');
+                    star.classList.remove('bi-star-fill');
+                }
+            });
+        }
+
+        function setActiveStars(value) {
+            stars.forEach(star => {
+                const starValue = parseInt(star.getAttribute('data-value'));
+                if (starValue <= value) {
+                    star.classList.add('bi-star-fill');
+                    star.classList.remove('bi-star');
+                    star.classList.add('active');
+                } else {
+                    star.classList.add('bi-star');
+                    star.classList.remove('bi-star-fill');
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function updateRatingText(value) {
+            const ratings = {
+                0: "Select rating",
+                1: "Poor",
+                2: "Fair",
+                3: "Good",
+                4: "Very Good",
+                5: "Excellent"
+            };
+            ratingText.textContent = ratings[value];
+        }
     });
 </script>

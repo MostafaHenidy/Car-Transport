@@ -1,13 +1,15 @@
 @extends('back.master')
 @section('trips-active', 'active')
 @section('content')
-
+    @if (session('status'))
+        <div class="alert alert-success text-center">{{ session('status') }}</div>
+    @endif
     <div class="card bg-dark text-white mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Trips Management</h5>
-            <a href="#" class="btn btn-success btn-sm">
+            <button data-bs-toggle="modal" data-bs-target="#createTripModal" class="btn btn-success btn-sm">
                 <i class="bi bi-plus-lg"></i> Add New Trip
-            </a>
+            </button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -65,6 +67,8 @@
                                     </div>
                                 </td>
                             </tr>
+
+
                             <!-- View Modal -->
                             <div class="modal fade" id="viewTripModal{{ $trip->id }}" tabindex="-1"
                                 aria-hidden="true">
@@ -119,12 +123,12 @@
                             </div>
 
                             <!-- Edit Modal -->
-                            {{-- <div class="modal fade" id="editTripModal{{ $trip->id }}" tabindex="-1"
+                            <div class="modal fade" id="editTripModal{{ $trip->id }}" tabindex="-1"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form action="{{ route('admin.trips.update', $trip->id) }}" method="POST">
                                         @csrf
-                                        @method('PUT')
+                                        @method('Patch')
                                         <div class="modal-content bg-dark text-white">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit Trip</h5>
@@ -157,8 +161,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Price</label>
-                                                    <input type="number" step="0.01" class="form-control"
-                                                        name="price" value="{{ $trip->price /100 }}" required>
+                                                    <input type="text" step="0.01" class="form-control"
+                                                        name="price" value="{{ $trip->price / 100 }}" required>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -169,13 +173,13 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div> --}}
+                            </div>
 
                             <!-- Delete Modal -->
-                            {{-- <div class="modal fade" id="deleteTripModal{{ $trip->id }}" tabindex="-1"
+                            <div class="modal fade" id="deleteTripModal{{ $trip->id }}" tabindex="-1"
                                 aria-hidden="true">
                                 <div class="modal-dialog">
-                                    <form action="{{ route('admin.trips.destroy', $trip->id) }}" method="POST">
+                                    <form action="{{ route('admin.trips.delete', $trip->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-content bg-dark text-white">
@@ -196,20 +200,66 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div> --}}
+                            </div>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-            {{-- @if ($trips->hasPages())
+            @if ($trips->hasPages())
                 <div class="card-footer">
                     {{ $trips->links() }}
                 </div>
-            @endif --}}
+            @endif
         </div>
     </div>
 
+    <!-- Create Modal -->
+    <div class="modal fade" id="createTripModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+
+            <form action="{{ route('admin.trips.create') }}" method="POST">
+                @csrf
+                <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Trip</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Pickup Location</label>
+                            <input type="text" class="form-control" name="pickup" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Routes</label>
+                            <textarea class="form-control" name="routes" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Transport</label>
+                            <input type="text" class="form-control" name="transport" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sites (comma separated)</label>
+                            <textarea class="form-control" name="sites" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Price</label>
+                            <input type="number" step="1.00" class="form-control" name="price" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Create Trip</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 @endsection

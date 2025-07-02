@@ -33,12 +33,18 @@ Route::group(
             Route::controller(AdminController::class)->name('trips.')->group(function () {
                 Route::get('/trips', 'index')->name('index');
                 Route::get('/trips/show', 'listAllTrips')->name('listAllTrips');
-                Route::put('trips/{trip}',  'updateTrips')->name('update');
+                Route::patch('/trips/{trip}',  'updateTrips')->name('update');
+                Route::post('/trips',  'createTrip')->name('create');
+                Route::delete('/trips/{trip}',  'deleteTrip')->name('delete');
             });
             Route::controller(AdminController::class)->name('tickets.')->group(function () {
                 Route::get('/tickets', 'index')->name('index');
                 Route::get('/tickets/show/{ticket}', 'showTickets')->name('showTickets');
                 Route::post('tickets/{ticket}/reply', 'reply')->name('reply');
+            });
+            Route::controller(AdminController::class)->name('reviews.')->group(function () {
+                Route::get('/reviews/show', 'listAllReviews')->name('listAllReviews');
+                Route::patch('/reviews/{review}', 'approveReview')->name('approveReview');
             });
         });
         require __DIR__ . '/adminAuth.php';

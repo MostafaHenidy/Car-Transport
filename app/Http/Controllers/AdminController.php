@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TripsRequest;
 use App\Models\Order;
+use App\Models\Review;
 use App\Models\supportTicket;
 use App\Models\Trips;
 use App\Models\User;
@@ -21,22 +23,10 @@ class AdminController extends Controller
             'ticketsCount' => SupportTicket::where('status', 'open')->count(),
             'recentOrders' => Order::latest()->take(5)->get(),
             'tickets' => SupportTicket::latest()->take(5)->get(),
+            'reviews' => Review::all(),
         ]);
     }
-    public function updateTrips(Request $request, $tripId)
-    {
-        $trip = Trips::where('id', $tripId);
-        $trip->update([
-            'name' => $request->name,
-            'pickup' => $request->pickup,
-            'routes' => $request->routes,
-            'transport' => $request->transport,
-            'sites' => $request->sites,
-            'price' => $request->price * 100,
-        ]);
-        $trip->save();
-        return redirect()->back()->with(['status' => 'success']);
-    }
+    // Support Tickets management
     public function reply(Request $request, SupportTicket $ticket)
     {
         $request->validate([
@@ -52,6 +42,17 @@ class AdminController extends Controller
         $user->notify(new UserSubmitTicketEmailNotification($user, $ticket));
         return redirect()->back()->with('success', 'Reply sent.');
     }
+    public function showTickets($id)
+    {
+        $ticket = supportTicket::findOrFail($id);
+        return view('back.tickets', ['ticket' => $ticket]);
+    }
+    // Order management
+    public function listAllOrders()
+    {
+        $orders = Order::paginate(10);
+        return view('back.orderList', ['orders' => $orders]);
+    }
     public function updateOrderStatus(Request $request, $id)
     {
         $request->validate([
@@ -64,19 +65,46 @@ class AdminController extends Controller
         $user->notify(new AdminUpdatedOrderStatusNotification($order, $user));
         return redirect()->back()->with('success', 'Order status updated successfully.');
     }
-    public function showTickets($id)
-    {
-        $ticket = supportTicket::findOrFail($id);
-        return view('back.tickets', ['ticket' => $ticket]);
-    }
-    public function listAllOrders()
-    {
-        $orders = Order::all();
-        return view('back.orderList', ['orders' => $orders]);
-    }
+    // Trips management
     public function listAllTrips()
     {
-        $trips = Trips::all();
+        $trips = Trips::paginate(10);
         return view('back.trips', ['trips' => $trips]);
+    }
+    public function createTrip(TripsRequest $request)
+    {
+        $validated = $request->validated();
+        $validated['price'] = (int) ($validated['price'] * 100);
+
+        $trip = Trips::create($validated);
+
+        return redirect()->back()->with(['status' => 'Trip created successfully!']);
+    }
+    public function deleteTrip($tripId)
+    {
+        Trips::destroy($tripId);
+        return redirect()->back()->with(['status' => 'Trip deleted successfull!']);
+    }
+    public function updateTrips(TripsRequest $request, $tripId)
+    {
+        // dd($request->all());
+        $trip = Trips::findOrFail($tripId);
+        $validated = $request->validated();
+        $validated['price'] = (int) ($validated['price'] * 100);
+        $trip->update($validated);
+        $trip->save();
+        return redirect()->back()->with(['status' => 'Trip updated successfully!']);
+    }
+    //  Reviews management
+    public function listAllReviews()
+    {
+        $reviews = Review::paginate(10);
+        return view('back.reviewList', ['reviews' => $reviews]);
+    }
+    public function approveReview($reviewId)
+    {
+        $review = Review::findOrFail($reviewId);
+        $review->update(['approved' => 1]);
+        return response()->json(['status' => 'approved']);
     }
 }
