@@ -1,5 +1,5 @@
 @extends('back.master')
-@section('review-active', 'active')
+@section('reviews-active', 'active')
 @section('content')
     <div class="card bg-dark text-white mb-4">
         <div class="card-header">
@@ -21,9 +21,18 @@
                     @foreach ($reviews as $review)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $review->name }}</td>
                             <td>
-                                @for ($i = 0; $i <= $review->rating; $i++)
+                                @php
+                                    $user = App\Models\User::where('email', $review->email)->first();
+                                @endphp
+                                @if ($user && $user->deleted_at === null)
+                                    {{ $user->name }}
+                                @else
+                                    <p class="text-light">Deleted user</p>
+                                @endif
+                            </td>
+                            <td>
+                                @for ($i = 0; $i < $review->rating; $i++)
                                     <i class="bi bi-star-fill"></i>
                                 @endfor
                             </td>

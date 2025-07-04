@@ -4,6 +4,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\TripsController;
 use Illuminate\Support\Facades\Route;
@@ -50,7 +51,7 @@ Route::group([
         ],
         function () {
             Route::controller(CheckoutController::class)->group(function () {
-                route::get('/', 'checkout')->name('checkout');
+                // route::get('/', 'checkout')->name('checkout');
                 route::get('/', 'checkoutLineItems')->name('checkoutLineItems');
                 route::get('/success', 'success')->name('checkout.success');
                 route::get('/cancel', 'cancel')->name('checkout.cancel');
@@ -81,6 +82,30 @@ Route::group([
                 route::get('/submitTicket', 'index')->name('index');
                 route::post('/submitTicket', 'store')->name('store');
                 route::get('/submitTicket/myTickets', 'myTickets')->name('myTickets');
+            });
+        }
+    );
+    Route::group(
+        [
+            'prefix' => 'github',
+            'as' => 'socialite.',
+        ],
+        function () {
+            Route::controller(SocialiteController::class)->group(function () {
+                route::get('/login', 'githubLogin')->name('githubLogin');
+                route::get('/redirect', 'githubRedirect')->name('githubRedirect');
+            });
+        }
+    );
+    Route::group(
+        [
+            'prefix' => 'google',
+            'as' => 'socialite.',
+        ],
+        function () {
+            Route::controller(SocialiteController::class)->group(function () {
+                route::get('/login', 'googleLogin')->name('googleLogin');
+                route::get('/redirect', 'googleRedirect')->name('googleRedirect');
             });
         }
     );

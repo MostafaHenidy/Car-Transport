@@ -1,9 +1,29 @@
 @extends('front.master')
 @section('content')
     @if (session('status') === 'ticketSubmitted')
-        <!-- Success message remains the same -->
+        <div class="text-center container px-vw-5 py-vh-5">
+            <i class="bi bi-check-circle fs-1"></i>
+            <h3>Ticket successfully submitted</h3>
+            <ul class="list-unstyled text-center">
+                <li>
+                    <p>A confirmation email is on the way</p>
+                </li>
+                <li>
+                    <p>An agent will be in touch within 24 hours</p>
+                </li>
+            </ul>
+            <div class="d-flex justify-content-center">
+                <a href="{{ route('front.index') }}"
+                    class="btn btn-outline-dark me-5 text-light btn-xl mb-4 rounded-pill">Back</a>
+                <a href="{{ route('front.ticket.myTickets') }}" class="btn btn-light btn-xl mb-4 rounded-pill">My tickets</a>
+            </div>
+        </div>
     @elseif ($tickets->where('status', 'open')->isNotEmpty())
-        <!-- Open ticket message remains the same -->
+        <div class="container text-center px-vw-5 py-vh-5">
+            <h4 class="text-warning">You already have an open ticket.</h4>
+            <p>Please wait until your previous ticket is answered.</p>
+            <a href="{{ route('front.ticket.myTickets') }}" class="btn btn-light btn-xl mb-4 rounded-pill">My tickets</a>
+        </div>
     @else
         <div class="container px-vw-5 py-vh-5">
             <!-- Progress Bar and Heading Wrapper -->

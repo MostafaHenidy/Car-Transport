@@ -1,9 +1,8 @@
 @extends('front.master')
 @section('content')
-
-    <div class="bg-black py-5 my-5">
-        <div class="container">
-            <div class="trip-cards-scroll justify-content-center">
+    <div class="container px-vw-5 py-vh-5 ">
+        @if ($cart && count($cart->trips) > 0)
+            <div class="row d-flex align-items-center justify-content-center">
                 @foreach ($cart->trips as $trip)
                     <div class="trip-card p-4 d-flex flex-column">
                         <h3 class="text-center fs-3">
@@ -30,39 +29,31 @@
                                     class="btn btn-outline-danger w-100">
                                     <i class="bi bi-cart-x-fill me-2"></i>Remove
                                 </a>
-                            @else
-                                <a href="{{ route('front.cart.addToCart', $trip) }}" class="btn btn-outline-light w-100">
-                                    <i class="bi bi-cart3 me-2"></i>Add to Cart
-                                </a>
                             @endif
                         </div>
                     </div>
                 @endforeach
             </div>
-        </div>
-        <div class="me-5">
-            @if ($cart && count($cart->trips) > 0)
-                <div class="float-end">
-                    @if ($cart && count($cart->trips) > 0)
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
-                            <p class="fs-3 fw-bold mb-0 me-3">Total: ({{ $cart->total() }})</p>
-                            <a href="{{ route('front.checkout.checkoutLineItems') }}"
-                                class="btn btn-outline-light mt-2 mt-md-0">
-                                Checkout <i class="bi bi-arrow-right-short"></i>
-                            </a>
-                        </div>
-                    @endif
+            <div class="float-end">
+                @if ($cart && count($cart->trips) > 0)
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <p class="fs-3 fw-bold mb-0 me-3">Total: ({{ $cart->total() }})</p>
+                        <a href="{{ route('front.checkout.checkoutLineItems') }}"
+                            class="btn btn-outline-light mt-2 mt-md-0">
+                            Checkout <i class="bi bi-arrow-right-short"></i>
+                        </a>
+                    </div>
+                @endif
+            </div>
+        @else
+            <div class="row d-flex justify-content-center py-5 mt-5">
+                <div class="trip-card p-5 d-flex justify-content-center align-items-center text-center"
+                    style="min-height: 200px;">
+                    <strong class="fs-5 text-light">Your cart is currently empty. Start exploring and add trips to your
+                        cart!</strong>
                 </div>
-            @else
-                <div class="alert alert-secondary text-center fw-medium mt-2"><i class="bi bi-cart me-2 "></i>Your cart is
-                    empty
-                </div>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
-
-
-
-
 
 @endsection

@@ -4,14 +4,21 @@
 
 <body>
 
-    <div class="d-flex">
+    <div id="layoutWrapper">
         <!-- Sidebar -->
         @include('back.partials.sidebar')
+
+        <!-- Toggle Button -->
+        <button id="toggleSidebar" class="btn btn-sm btn-outline-light toggle-btn">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+
         <!-- Main Content -->
-        <div class="flex-grow-1 p-4">
+        <div id="mainContent">
             @yield('content')
         </div>
     </div>
+
     @include('back.partials.scripts')
 </body>
 

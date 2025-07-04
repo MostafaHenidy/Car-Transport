@@ -1,11 +1,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    <meta name="description" content="A well made and handcrafted Bootstrap 5 template">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets-front') }}/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets-front') }}/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets-front') }}/img/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('assets-front') }}/img/favicon.png">
+    <link rel="icon" type="image/png" href="{{ asset('assets-front/img/logo.png') }}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ asset('assets-front/img/logo.png') }}" sizes="16x16" />
+    <link rel="icon" type="image/png" href="{{ asset('assets-front/img/logo.png') }}" sizes="48x48" />
     <meta name="author" content="Holger Koenemann">
     <meta name="generator" content="Eleventy v2.0.0">
     <meta name="HandheldFriendly" content="true">
@@ -148,12 +146,10 @@
             display: inline-block;
             unicode-bidi: bidi-override;
             direction: rtl;
-            /* Right-to-left to make hover work correctly */
         }
 
         .star-icon {
             color: #6c757d;
-            /* Gray color for empty stars */
             cursor: pointer;
             transition: all 0.2s ease;
             margin: 0 2px;
@@ -170,6 +166,65 @@
         .star-icon:hover {
             transform: scale(1.2);
             /* Slightly enlarge on hover */
+        }
+    </style>
+    <style>
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .profile-body {
+            padding-top: 70px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .stat-label {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            /* position: absolute; */
+            /* top: 20px;
+            right: 20px; */
+            background-color: white;
+            color: #764ba2;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>

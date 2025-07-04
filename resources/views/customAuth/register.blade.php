@@ -17,8 +17,8 @@
                 {{-- phone --}}
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control form-control-lg bg-gray-800 border-dark text-white"
-                        name="phone" required aria-describedby="phoneHelp">
+                    <input type="tel" class="form-control form-control-lg bg-gray-800 border-dark " name="phone"
+                        required aria-describedby="phoneHelp">
                     <div id="phoneHelp" class="form-text">
                         Please start with your country code. Example: +20 for Egypt.
                     </div>

@@ -1,7 +1,7 @@
 @extends('front.master')
 @section('content')
     <main>
-
+        {{-- Our Mission Section --}}
         <div class="w-100 overflow-hidden position-relative bg-black text-white" data-aos="fade">
             <div class="position-absolute w-100 h-100 bg-black opacity-75 top-0 start-0"></div>
             <div class="container py-vh-4 position-relative mt-5 px-vw-5 text-center">
@@ -16,7 +16,7 @@
             </div>
 
         </div>
-
+        {{-- Cars Images Section --}}
         <div class="w-100 position-relative bg-black text-white bg-cover d-flex align-items-center">
             <div class="container-fluid px-vw-5">
                 <div class="position-absolute w-100 h-50 bg-dark bottom-0 start-0"></div>
@@ -38,6 +38,7 @@
                 </div>
             </div>
         </div>
+        {{-- Our Strategy Section --}}
         <div class="bg-dark">
             <div class="container px-vw-5 py-vh-5">
                 <div class="row d-flex align-items-center">
@@ -77,6 +78,7 @@
             </div>
         </div>
 
+        {{-- Trips Section --}}
         <div class="bg-black py-5 my-5">
             <div class="container">
                 <h2 class="text-center text-white mb-5">What we charge</h2>
@@ -121,6 +123,7 @@
             </div>
         </div>
 
+        {{-- Review Form Section --}}
         @if (Auth::user())
             <div class="container-fluid px-vw-5 position-relative" data-aos="fade">
                 <div class="position-absolute w-100 h-50 bg-black top-0 start-0"></div>
@@ -138,7 +141,7 @@
                                         class="text-white">
                                         @csrf
                                         <input type="hidden" class="form-control bg-black text-white border-secondary"
-                                            id="name" name="name" value="{{ Auth::user()->name }}" required>
+                                            id="email" name="email" value="{{ Auth::user()->email }}" required>
 
                                         <!-- Star Rating -->
                                         <div class="mb-4 text-center">
@@ -195,7 +198,7 @@
         @endif
 
 
-
+        {{-- Reviews Section --}}
         <div class="bg-dark py-vh-5">
             <div class="container px-vw-5">
                 <div class="row d-flex gx-5 align-items-center">
@@ -208,12 +211,44 @@
                                 <p class="text-secondary lead">"{{ $review->review }}"</p>
                                 <div
                                     class="d-flex justify-content-start align-items-center border-top border-secondary pt-3">
-                                    {{-- <img src="{{ asset('assets-front') }}/img/webp/person14.webp" width="96"
-                                        height="96" class="rounded-circle me-3" alt="a nice person" data-aos="fade"
-                                        loading="lazy"> --}}
-                                    <div>
-                                        <span class="h6 fw-5">{{ $review->name }}</span><br>
-                                    </div>
+                                    @php
+                                        $user = App\Models\User::where('email', $review->email)->first();
+                                        $avatar = optional($user)->avatar;
+                                    @endphp
+                                    @if ($avatar)
+                                        @if (Str::startsWith($avatar, ['http://', 'https://']))
+                                            <img src="{{ $avatar }}" width="96" height="96"
+                                                class="rounded-circle me-3" alt="Reviewer avatar" data-aos="fade"
+                                                loading="lazy">
+                                        @else
+                                            <img src="{{ asset('storage/' . $avatar) }}" width="96" height="96"
+                                                class="rounded-circle me-3" alt="Reviewer avatar" data-aos="fade"
+                                                loading="lazy">
+                                        @endif
+                                    @elseif ($user)
+                                        {{-- Laravolt fallback if user exists but no avatar --}}
+                                        <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96"
+                                            height="96" class="rounded-circle me-3" alt="Reviewer avatar"
+                                            data-aos="fade" loading="lazy">
+                                    @else
+                                        {{-- Guest reviewer fallback --}}
+                                        @if ($user && $user->deleted_at === null)
+                                            <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96"
+                                                height="96" class="rounded-circle me-3" alt="Guest avatar"
+                                                data-aos="fade" loading="lazy">
+                                        @else
+                                            <img src="{{ Avatar::create('Deleted user')->toBase64() }}" width="96"
+                                                height="96" class="rounded-circle me-3" alt="Guest avatar"
+                                                data-aos="fade" loading="lazy">
+                                        @endif
+                                    @endif
+                                    @if ($user && $user->deleted_at === null)
+                                        <div>
+                                            <span class="h6 fw-5">{{ $user->name }}</span><br>
+                                        </div>
+                                    @else
+                                        <span class="text-secondary">Deleted user</span>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach

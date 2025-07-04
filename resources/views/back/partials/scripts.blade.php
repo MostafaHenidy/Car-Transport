@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).on('click', '.single-approve-btn', function(e) {
         e.preventDefault();
@@ -24,6 +25,26 @@
             error: function() {
                 alert('Could not approve this review.');
             }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.getElementById("mainContent");
+        const icon = toggleBtn.querySelector("i");
+
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+            mainContent.classList.toggle("expanded");
+
+            // Toggle icon direction
+            icon.classList.toggle("bi-chevron-left");
+            icon.classList.toggle("bi-chevron-right");
+
+            // Toggle button position
+            toggleBtn.style.left = sidebar.classList.contains("collapsed") ? "10px" : "260px";
         });
     });
 </script>

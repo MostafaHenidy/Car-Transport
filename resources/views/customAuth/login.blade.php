@@ -32,6 +32,17 @@
                 </div>
             </div>
         </form>
-
+        <div class="col border-end border-dark">
+            <ul class="nav flex-row justify-content-center">
+                <li class="nav-item ms-3 me-3">
+                    <a href="{{ route('front.socialite.githubLogin') }}" class="link-fancy link-fancy-light"><i
+                            class="bi bi-github fs-4"></i></a>
+                </li>
+                <li class="nav-item ms-3 me-3">
+                    <a href="{{ route('front.socialite.googleLogin') }}" class="link-fancy link-fancy-light"><i
+                            class="bi bi-google fs-4"></i></a>
+                </li>
+            </ul>
+        </div>
     </main>
 @endsection

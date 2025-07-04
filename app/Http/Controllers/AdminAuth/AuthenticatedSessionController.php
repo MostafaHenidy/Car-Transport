@@ -4,8 +4,6 @@ namespace App\Http\Controllers\AdminAuth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Models\Cart;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +37,8 @@ class AuthenticatedSessionController extends Controller
 
         Auth::guard('admin')->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
+        $request->session()->forget('admin_login');
 
         $request->session()->regenerateToken();
         return redirect()->route('admin.login');

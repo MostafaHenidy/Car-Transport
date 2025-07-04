@@ -1,13 +1,41 @@
-<div class="sidebar p-3">
-    @include('front.partials.logo')
-    <ul class="nav flex-column">
-        <li class="nav-item mb-2"><a href="{{ route('admin.index') }}" class="nav-link @yield('dashboard-active')"><i
-                    class="bi bi-clipboard-data"></i> Dashboard</a></li>
-        <li class="nav-item mb-2"><a href="{{ route('admin.orders.listAllOrders') }}" class="nav-link @yield('orders-active')"><i
-                    class="bi bi-bag-check"></i> Orders</a></li>
-        <li class="nav-item mb-2"><a href="{{ route('admin.trips.listAllTrips') }}"
-                class="nav-link @yield('trips-active')"><i class="bi bi-car-front-fill"></i> Trips</a></li>
-        <li class="nav-item mb-2"><a href="{{ route('admin.reviews.listAllReviews') }}" class="nav-link @yield('review-active')"><i
-                    class="bi bi-hand-thumbs-up-fill"></i> Reviews</a></li>
-    </ul>
+<div class="sidebar glass-sidebar p-3 position-fixed top-0 start-0 z-3" id="sidebar" style="width: 260px;">
+    <div class="glass-content d-flex flex-column h-100">
+
+        <div class="sidebar-header mb-4">
+            @include('front.partials.logo')
+        </div>
+
+
+        <ul class="nav flex-column sidebar-nav flex-grow-1">
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.index') }}" class="nav-link @yield('dashboard-active')">
+                    <i class="me-2 bi bi-house-door-fill"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.orders.listAllOrders') }}" class="nav-link @yield('orders-active')">
+                    <i class="me-2 bi bi-bag-check"></i> Orders
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.trips.listAllTrips') }}" class="nav-link @yield('trips-active')">
+                    <i class="me-2 bi bi-car-front-fill"></i> Trips
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.reviews.listAllReviews') }}" class="nav-link @yield('reviews-active')">
+                    <i class="me-2 bi bi-star-fill"></i> Reviews
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button class="nav-link">
+                        <i class="me-2 bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+
+    </div>
 </div>

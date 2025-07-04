@@ -37,7 +37,7 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <i class="bi bi-flag-fill"></i>
+                        <i class="bi bi-globe-americas"></i>
                     </button>
                     <ul class="dropdown-menu">
                         @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
@@ -54,10 +54,39 @@
                 <!-- Login/Logout -->
                 @if (Route::has('login'))
                     @auth
-                        <form id="logoutForm" action="{{ url('/logout') }}" method="POST" class="m-0">
-                            @csrf
-                            <button class="btn btn-light" type="submit">Logout</button>
-                        </form>
+                        <div class="dropdown">
+                            <button class="btn d-flex align-items-center text-light dropdown-toggle p-1 px-2 rounded"
+                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @php
+                                    $avatar = Auth::user()->avatar;
+                                @endphp
+                                @if ($avatar !== null)
+                                    @if (Str::startsWith($avatar, ['http://', 'https://']))
+                                        <img src="{{ $avatar }}" alt="Profile" class="rounded-circle me-2"
+                                            style="width: 32px; height: 32px; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('storage/' . $avatar) }}" alt="Profile"
+                                            class="rounded-circle me-2"
+                                            style="width: 32px; height: 32px; object-fit: cover;">
+                                    @endif
+                                @else
+                                    <img src="{{ Avatar::create(Auth::user()->name)->toBase64() }}" alt="Profile"
+                                        class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                @endif
+                                <span class="fw-semibold">{{ Str::limit(Auth::user()->name, 15) }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('front.profile.edit') }}">Profile</a>
+                                </li>
+                                <li>
+                                    <form id="logoutForm" action="{{ url('/logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button class="dropdown-item" type="submit">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-light">Login</a>
                     @endauth

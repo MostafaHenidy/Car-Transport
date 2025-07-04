@@ -20,7 +20,7 @@ class TripsController extends Controller
     {
         $user = Auth::user();
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'rating' => 'required|integer|between:1,5',
             'review' => 'required|string|max:1000',
         ]);
