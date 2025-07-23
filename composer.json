@@ -15,6 +15,7 @@
         "laravolt/avatar": "^6.2",
         "mcamara/laravel-localization": "^2.3",
         "propaganistas/laravel-phone": "^5.3",
+        "spatie/laravel-permission": "^6.20",
         "spatie/laravel-sluggable": "^3.7",
         "symfony/intl": "^7.2"
     },
@@ -38,7 +39,10 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": [
+            "App/Helpers/helper.php"
+        ]
     },
     "scripts": {
         "post-autoload-dump": [

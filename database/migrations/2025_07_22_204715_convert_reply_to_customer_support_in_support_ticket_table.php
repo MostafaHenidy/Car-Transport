@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('support_tickets', function (Blueprint $table) {
-            $table->foreignId('admin_id')->nullable()->constrained('admins')->onDelete('cascade')->after('user_id');
-            $table->foreignId('parent_id')->nullable()->constrained('support_tickets')->onDelete('cascade')->after('admin_id');
+            $table->foreignId('Agent_id')->nullable()->constrained('support_stuff')->onDelete('cascade')->after('user_id');
         });
     }
 
@@ -23,7 +22,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('support_tickets', function (Blueprint $table) {
-            $table->dropColumn(['admin_id', 'parent_id']);
+            $table->dropForeign(['agent_id']);
+            $table->dropColumn('agent_id');
         });
     }
 };

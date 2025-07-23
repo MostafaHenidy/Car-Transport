@@ -39,10 +39,10 @@
             </div>
         </div>
         {{-- Our Strategy Section --}}
-        <div class="bg-dark">
+        <div class="bg-dark" id="whatWeDo">
             <div class="container px-vw-5 py-vh-5">
                 <div class="row d-flex align-items-center">
-                    <div class="col-12 col-lg-7 text-lg-end" data-aos="fade-right">
+                    <div class="col-12 col-lg-7 text-lg-end" data-aos="fade-right" >
                         <span class="h5 text-secondary fw-lighter">{{ __('keywords.What we do') }}</span>
                         <h2 class="display-4">
                             {{ __('keywords.Car Transport is a professional service that provides private cars with experienced drivers to transport individuals safely and comfortably from their pickup location to their destination. Whether it’s for business, personal travel, or special occasions, we ensure a smooth and reliable journey every time.') }}
@@ -79,7 +79,7 @@
         </div>
 
         {{-- Trips Section --}}
-        <div class="bg-black py-5 my-5">
+        <div class="bg-black py-5 my-5" id="pricing">
             <div class="container">
                 <h2 class="text-center text-white mb-5">What we charge</h2>
 
@@ -125,7 +125,7 @@
 
         {{-- Review Form Section --}}
         @if (Auth::user())
-            <div class="container-fluid px-vw-5 position-relative" data-aos="fade">
+            <div class="container-fluid px-vw-5 position-relative" data-aos="fade" id="reviews">
                 <div class="position-absolute w-100 h-50 bg-black top-0 start-0"></div>
 
                 <div class="position-relative py-vh-5 bg-cover bg-center rounded-5"

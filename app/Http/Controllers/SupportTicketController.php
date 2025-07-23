@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\supportTicket;
+use App\Models\SupportTicketReply;
 use App\Notifications\UserSubmitTicketNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SupportTicketController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('web', ['CheckPermission:SubmitSupportTicket']);
+    }
     public function index()
     {
         $user = Auth::user();
@@ -21,34 +26,47 @@ class SupportTicketController extends Controller
             'user_id' => Auth::user()->id,
             'subject' => $request->subject,
             'message' => $request->message,
+            'status' => 'open',
+
         ]);
         $user = Auth::user();
         $user->notify(new UserSubmitTicketNotification($user));
         return redirect()->back()->with('status', 'ticketSubmitted');
     }
 
-    public function reply(Request $request, SupportTicket $ticket)
+    public function replyToTicket(Request $request, SupportTicket $ticket)
     {
         $request->validate([
-            'reply' => 'required|string',
+            'message' => 'required|string',
         ]);
 
-        // Save reply (optional: create separate replies table if needed)
-        $ticket->reply = $request->reply;
-        $ticket->status = 'answered';
-        $ticket->save();
+        $reply = new SupportTicketReply([
+            'support_ticket_id' => $ticket->id,
+            'message' => $request->message,
+        ]);
 
-        // Optional: send email to user
 
-        return redirect()->back()->with('success', 'Reply sent.');
+        $reply->user_id = Auth::user()->id;
+        if ($ticket->status !== 'closed') {
+            $ticket->status = 'open';
+            $reply->save();
+            $ticket->save();
+        }
+        return back()->with('success', 'Reply sent.');
     }
+
     public function myTickets()
     {
         $user = Auth::user();
         $tickets = SupportTicket::where('user_id', $user->id)
-            ->whereNull('parent_id') // only get main tickets, not replies
             ->latest()
             ->get();
-        return view('front.viewAllTickets', get_defined_vars());
+        $tickets->load('replies');
+        return view('front.viewAllTickets', compact('tickets'));
+    }
+    public function UpdateTicketStatus(Request $request, supportTicket $ticket)
+    {
+        $ticket->status = $request->status;
+        return redirect()->with('success', 'Status updated');
     }
 }

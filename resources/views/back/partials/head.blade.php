@@ -102,4 +102,72 @@
             }
         }
     </style>
+    <style>
+        .trip-cards-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 2rem;
+            padding-left: 1rem;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .trip-cards-scroll:hover .trip-card {
+            opacity: 0.7;
+            filter: blur(2px);
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .trip-cards-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .trip-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 300px;
+            min-height: 520px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            border-radius: 1.5rem;
+            background-color: #111;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease, z-index 0.3s ease;
+            border: 2px solid transparent;
+            z-index: 1;
+            padding-bottom: 1rem;
+        }
+
+        .trip-card:hover {
+            opacity: 1 !important;
+            filter: none !important;
+            transform: scale(1.12);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+
+
+
+        .cart-btn-container {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            right: 1.5rem;
+        }
+
+        .trimmed-text {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+    </style>
 </head>

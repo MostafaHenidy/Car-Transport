@@ -81,6 +81,7 @@ Route::group([
             Route::controller(SupportTicketController::class)->group(function () {
                 route::get('/submitTicket', 'index')->name('index');
                 route::post('/submitTicket', 'store')->name('store');
+                Route::post('/support-tickets/{ticket}/reply', 'replyToTicket')->name('replyToTicket');
                 route::get('/submitTicket/myTickets', 'myTickets')->name('myTickets');
             });
         }

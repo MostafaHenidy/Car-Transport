@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Auth;
 
 class TripsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('web', ['CheckPermission:SubmitAreview']);
+    }
     public function index()
     {
         $trips = Trips::all();

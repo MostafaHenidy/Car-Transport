@@ -46,6 +46,14 @@ Route::group(
                 Route::get('/reviews/show', 'listAllReviews')->name('listAllReviews');
                 Route::patch('/reviews/{review}', 'approveReview')->name('approveReview');
             });
+            Route::controller(AdminController::class)->name('users.')->group(function () {
+                Route::get('/users/show', 'listDeletedUsers')->name('listDeletedUsers');
+                Route::patch('/users/{user}', 'recoverUserAccount')->name('recoverUserAccount');
+            });
+            Route::controller(AdminController::class)->name('support_stuff.')->group(function () {
+                Route::get('/stuff/show', 'ListAllSupportStuff')->name('ListAllSupportStuff');
+                Route::post('/stuff/add',  'AddAgent')->name('AddAgent');
+            });
         });
         require __DIR__ . '/adminAuth.php';
     }

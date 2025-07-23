@@ -28,6 +28,31 @@
                 </a>
             </li>
             <li class="nav-item mb-2">
+                <a href="{{ route('admin.users.listDeletedUsers') }}" class="nav-link @yield('users-active')">
+                    @php
+                        $deletedUsers = App\Models\User::onlyTrashed()->get();
+                    @endphp
+                    <span class="position-relative">
+                        @if ($deletedUsers && $deletedUsers->count() > 0)
+                            <i class="me-2 bi bi-people-fill"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger"
+                                style="font-size: 0.6rem;">
+                                {{ $deletedUsers->count() }}
+                            </span>
+                        @else
+                            <i class="me-2 bi bi-people-fill"></i>
+                        @endif
+                    </span>
+                    Users
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a href="{{ route('admin.support_stuff.ListAllSupportStuff') }}" class="nav-link @yield('supportStuff-active')">
+                    <i class="me-2 bi bi-headset"></i> Customer Support
+                </a>
+            </li>
+            <li class="nav-item mb-2">
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
                     <button class="nav-link">

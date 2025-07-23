@@ -29,6 +29,7 @@ class SocialiteController extends Controller
                 'provider_name' => 'github',
             ]
         );
+        $user->assignRole('user');
         Auth::login($user, true);
         return redirect()->route('front.index');
     }
@@ -52,6 +53,7 @@ class SocialiteController extends Controller
                 'provider_name' => 'google',
             ]
         );
+        $user->assignRole('user');
         Auth::login($user, true);
         return redirect()->route('front.index');
     }

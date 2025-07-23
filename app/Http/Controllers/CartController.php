@@ -10,6 +10,12 @@ use Laravel\Cashier\Cashier;
 
 class CartController extends Controller
 {
+    function __construct()
+    {
+        // Orders Management
+        $this->middleware('web', ['CheckPermission:AddToCart'])->only(['index', 'addToCart']);
+        $this->middleware('web', ['CheckPermission:RemoveFromCart'])->only(['index', 'removeFromCart']);
+    }
     public function index()
     {
         return view('front.cart');

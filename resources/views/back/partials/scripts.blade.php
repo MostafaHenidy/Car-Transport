@@ -48,3 +48,27 @@
         });
     });
 </script>
+<script>
+    $(document).on('click', '.single-recover-btn', function(e) {
+        e.preventDefault();
+
+        let button = $(this);
+        let userId = button.data('id');
+        let row = button.closest('tr');
+
+        $.ajax({
+            type: 'PATCH',
+            url: '{{ route('admin.users.recoverUserAccount', ':id') }}'.replace(':id', userId),
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                button.html('<i class="bi bi-check-all"></i>');
+                row.fadeOut();
+            },
+            error: function() {
+                alert('Could not recover this account.');
+            }
+        });
+    });
+</script>

@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+    function __construct()
+    {
+        // Notification Management
+        $this->middleware('web', ['CheckPermission:MarkNotificationAsRead'])->only(['markAsRead']);
+        $this->middleware('web', ['CheckPermission:DeleteNotification'])->only(['clearAll']);
+    }
     public function markAsRead($notificationId)
     {
         $notification = Auth::user()->notifications()->where('id', $notificationId)->first();
