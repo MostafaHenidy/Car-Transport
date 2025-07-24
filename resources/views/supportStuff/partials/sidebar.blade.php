@@ -12,11 +12,7 @@
                     <i class="me-2 bi bi-house-door-fill"></i> Dashboard
                 </a>
             </li>
-            <li class="nav-item mb-2">
-                <a href="#" class="nav-link @yield('tickets-active')">
-                    <i class="me-2 bi bi-headset"></i> Tickets
-                </a>
-            </li>
+
             <li class="nav-item mb-2">
                 <form action="{{ route('support_stuff.logout') }}" method="POST">
                     @csrf

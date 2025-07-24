@@ -72,3 +72,28 @@
         });
     });
 </script>
+<script>
+    $(document).on('click', '.agent-recover-btn', function(e) {
+        e.preventDefault();
+        let button = $(this);
+        let agentId = button.data('id');
+        let row = button.closest('tr');
+
+        $.ajax({
+            type: 'PATCH',
+            url: '{{ route('admin.support_stuff.recoverAgentAccount', ':id') }}'.replace(':id',
+                agentId),
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                // 1. Remove line-through styling
+                row.find('td.text-decoration-line-through').removeClass(
+                    'text-decoration-line-through');
+            },
+            error: function() {
+                alert('Could not recover this account.');
+            }
+        });
+    });
+</script>

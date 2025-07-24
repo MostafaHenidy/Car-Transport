@@ -21,7 +21,7 @@ Route::group(
         'as' => 'support_stuff.'
     ],
     function () {
-        Route::middleware('support_stuff')->group(function () {
+        Route::middleware(['support_stuff', 'lastSeen'])->group(function () {
             Route::controller(SupportStuffController::class)->group(function () {
                 Route::get('/', 'index')->name('index');
             });
@@ -30,6 +30,7 @@ Route::group(
                 Route::get('/tickets/show/{ticket}', 'showTickets')->name('showTickets');
                 Route::post('tickets/{ticket}/reply', 'replyToTicket')->name('replyToTicket');
                 Route::put('tickets/{ticket}/updateTicketStatus', 'updateTicketStatus')->name('updateTicketStatus');
+                Route::delete('tickets/{ticket}/deleteTicket', 'deleteTicket')->name('deleteTicket');
             });
         });
 

@@ -1,7 +1,6 @@
 @extends('front.master')
 @section('content')
     @if (role('web', 'user'))
-        @php use Illuminate\Support\Str; @endphp
         <div class="container pt-5 my-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -14,7 +13,7 @@
                                 $avatar = Auth::user()->avatar;
                             @endphp
                             @if ($avatar !== null)
-                                @if (Str::startsWith($avatar, ['http://', 'https://']))
+                                @if (Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://']))
                                     <img src="{{ $avatar }}" alt="Profile" class="profile-img mb-3">
                                 @else
                                     <img src="{{ asset('storage/' . $avatar) }}" alt="Profile" class="profile-img mb-3">

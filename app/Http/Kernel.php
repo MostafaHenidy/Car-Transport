@@ -71,6 +71,7 @@ class Kernel extends HttpKernel
         'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
         'admin' => \App\Http\Middleware\Admin::class,
         'CheckPermission' => \App\Http\Middleware\CheckPermission::class,
-        'support_stuff' =>\App\Http\Middleware\support_stuff::class,
+        'support_stuff' => \App\Http\Middleware\support_stuff::class,
+        'lastSeen' => \App\Http\Middleware\lastSeen::class,
     ];
 }

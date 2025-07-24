@@ -33,8 +33,32 @@
 
             <div class="card-body bg-light">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="{{ Avatar::create($ticket->user->name)->toBase64() }}" width="40" height="40"
-                        class="rounded-circle me-3" alt="User avatar">
+                    @php
+                        $user = $ticket->user;
+                        $avatar = optional($user)->avatar;
+                    @endphp
+                    @if ($avatar)
+                        @if (Str::startsWith($avatar, ['http://', 'https://']))
+                            <img src="{{ $avatar }}" width="40" height="40" class="rounded-circle me-3"
+                                alt="User avatar">
+                        @else
+                            <img src="{{ asset('storage/' . $avatar) }}" width="40" height="40"
+                                class="rounded-circle me-3" alt="User avatar">
+                        @endif
+                    @elseif ($user)
+                        {{-- Laravolt fallback if user exists but no avatar --}}
+                        <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96" height="96"
+                            class="rounded-circle me-3" alt="Reviewer avatar" data-aos="fade" loading="lazy">
+                    @else
+                        {{-- Guest reviewer fallback --}}
+                        @if ($user && $user->deleted_at === null)
+                            <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96" height="96"
+                                class="rounded-circle me-3" alt="Guest avatar" data-aos="fade" loading="lazy">
+                        @else
+                            <img src="{{ Avatar::create('Deleted user')->toBase64() }}" width="96" height="96"
+                                class="rounded-circle me-3" alt="Guest avatar" data-aos="fade" loading="lazy">
+                        @endif
+                    @endif
                     <div>
                         <div class="fw-bold text-dark">{{ $ticket->user->name }}</div>
                         <div class="text-muted">{{ $ticket->user->email }}</div>
@@ -55,15 +79,73 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
                             @if ($reply->support_stuff_id)
-                                <img src="{{ Avatar::create($reply->agent->name)->toBase64() }}" width="40"
-                                    height="40" class="rounded-circle me-3">
+                                @php
+                                    $agent = $reply->agent;
+                                    $avatar = optional($agent)->avatar;
+                                @endphp
+                                @if ($avatar)
+                                    @if (Str::startsWith($avatar, ['http://', 'https://']))
+                                        <img src="{{ $avatar }}" width="40" height="40"
+                                            class="rounded-circle me-3" alt="User avatar">
+                                    @else
+                                        <img src="{{ asset('storage/' . $avatar) }}" width="40" height="40"
+                                            class="rounded-circle me-3" alt="User avatar">
+                                    @endif
+                                @elseif ($agent)
+                                    {{-- Laravolt fallback if user exists but no avatar --}}
+                                    <img src="{{ Avatar::create($agent->name)->toBase64() }}" width="40" height="40"
+                                        class="rounded-circle me-3" alt="Reviewer avatar" data-aos="fade" loading="lazy">
+                                @else
+                                    {{-- Guest reviewer fallback --}}
+                                    @if ($agent && $agent->deleted_at === null)
+                                        <img src="{{ Avatar::create($agent->name)->toBase64() }}" width="40"
+                                            height="40" class="rounded-circle me-3" alt="Guest avatar" data-aos="fade"
+                                            loading="lazy">
+                                    @else
+                                        <img src="{{ Avatar::create('Deleted Agent')->toBase64() }}" width="40"
+                                            height="40" class="rounded-circle me-3" alt="Guest avatar" data-aos="fade"
+                                            loading="lazy">
+                                    @endif
+                                @endif
                                 <div>
-                                    <strong class="text-dark">{{ $reply->agent->name }}</strong>
+                                    @if ($agent && $agent->deleted_at === null)
+                                        <strong class="text-dark">{{ $reply->agent->name }}</strong>
+                                    @else
+                                        <strong class="text-dark">Deleted Agent</strong>
+                                    @endif
+                                    
                                     <div class="text-muted">Support Agent</div>
                                 </div>
                             @else
-                                <img src="{{ Avatar::create($reply->user->name)->toBase64() }}" width="40"
-                                    height="40" class="rounded-circle me-3">
+                                @php
+                                    $user = $ticket->user;
+                                    $avatar = optional($user)->avatar;
+                                @endphp
+                                @if ($avatar)
+                                    @if (Str::startsWith($avatar, ['http://', 'https://']))
+                                        <img src="{{ $avatar }}" width="40" height="40"
+                                            class="rounded-circle me-3" alt="User avatar">
+                                    @else
+                                        <img src="{{ asset('storage/' . $avatar) }}" width="40" height="40"
+                                            class="rounded-circle me-3" alt="User avatar">
+                                    @endif
+                                @elseif ($user)
+                                    {{-- Laravolt fallback if user exists but no avatar --}}
+                                    <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96"
+                                        height="96" class="rounded-circle me-3" alt="Reviewer avatar" data-aos="fade"
+                                        loading="lazy">
+                                @else
+                                    {{-- Guest reviewer fallback --}}
+                                    @if ($user && $user->deleted_at === null)
+                                        <img src="{{ Avatar::create($user->name)->toBase64() }}" width="96"
+                                            height="96" class="rounded-circle me-3" alt="Guest avatar"
+                                            data-aos="fade" loading="lazy">
+                                    @else
+                                        <img src="{{ Avatar::create('Deleted user')->toBase64() }}" width="96"
+                                            height="96" class="rounded-circle me-3" alt="Guest avatar"
+                                            data-aos="fade" loading="lazy">
+                                    @endif
+                                @endif
                                 <div>
                                     <strong class="text-dark">{{ $reply->user->name }}</strong>
                                     <div class="text-muted">Customer</div>
@@ -74,18 +156,6 @@
                             </div>
                         </div>
                         <p class="text-dark">{{ $reply->message }}</p>
-
-                        @if ($reply->attachments && count($reply->attachments) > 0)
-                            <div class="attachments mt-3">
-                                <div class="d-flex gap-2">
-                                    @foreach ($reply->attachments as $attachment)
-                                        <span class="badge bg-secondary text-white">
-                                            <i class="fas fa-file me-1 text-light"></i> {{ $attachment->name }}
-                                        </span>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             @endforeach
@@ -105,8 +175,8 @@
                 <div class="card-body bg-light text-dark">
                     <div class="mb-3">
                         <label for="reply" class="form-label">Your message:</label>
-                        <textarea name="message" id="reply" rows="4" class="form-control" placeholder="Type your response here..."
-                            required></textarea>
+                        <textarea name="message" id="reply" rows="4" class="form-control"
+                            placeholder="Type your response here..." required></textarea>
                     </div>
                 </div>
                 <div class="card-footer text-end bg-white">
@@ -118,4 +188,3 @@
         </form>
     </div>
 @endsection
-

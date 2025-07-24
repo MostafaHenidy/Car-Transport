@@ -16,23 +16,20 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
         $permissions = [
-            'ListAllOrders',
-            'UpdateOrderState',
-            'ListAllTrips',
-            'UpdateTrip',
-            'CreateTrip',
-            'DeleteTrip',
             'ListAllSupportTickets',
             'ViewSupportTicket',
+            'UpdateTicketStatus',
+            'DeleteTicket',
             'ReplyToSupportTicket',
-            'ListAllReviews',
-            'ApproveReview',
-            'ListAllDeletedUser',
-            'RecoverUserAccount',
         ];
-        $AdminRole = Role::where('name', 'admin')->first();
+        $SupportStuffRole = Role::where('name', 'supportStuff')->first();
         foreach ($permissions as $permission) {
-            $AdminRole->givePermissionTo($permission);
+            $permissionModel = Permission::firstOrCreate(
+                ['name' => $permission, 'guard_name' => 'support_stuff']
+            );
+            if ($SupportStuffRole) {
+                $SupportStuffRole->givePermissionTo($permissionModel);
+            }
         }
     }
 }

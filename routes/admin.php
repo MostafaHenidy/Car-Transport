@@ -53,6 +53,8 @@ Route::group(
             Route::controller(AdminController::class)->name('support_stuff.')->group(function () {
                 Route::get('/stuff/show', 'ListAllSupportStuff')->name('ListAllSupportStuff');
                 Route::post('/stuff/add',  'AddAgent')->name('AddAgent');
+                Route::delete('/stuff/{agent}/delete',  'DeleteAgent')->name('DeleteAgent');
+                Route::patch('/stuff/{agent}',  'recoverAgentAccount')->name('recoverAgentAccount');
             });
         });
         require __DIR__ . '/adminAuth.php';

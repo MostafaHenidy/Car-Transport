@@ -148,7 +148,8 @@ class AdminController extends Controller
     // Customer Support
     public function ListAllSupportStuff()
     {
-        $stuff = SupportStuff::paginate(20);
+        $stuff = SupportStuff::withTrashed()->paginate(20);
+        // $deletedStuff = SupportStuff::onlyTrashed()->get();
         return view('back.supportStuff', ['stuff' => $stuff]);
     }
     public function AddAgent(Request $request)
@@ -162,8 +163,19 @@ class AdminController extends Controller
 
         $validated['password'] = bcrypt($validated['password']);
 
-        SupportStuff::create($validated);
-
+        $agent = SupportStuff::create($validated);
+        $agent->assignRole('supportStuff');
         return redirect()->route('admin.index');
+    }
+    public function DeleteAgent(SupportStuff $agent)
+    {
+        $agent->delete();
+        return redirect()->back()->with(['success', 'Agent deleted successfully!']);
+    }
+    public function recoverAgentAccount($agentId)
+    {
+        $agent = SupportStuff::withTrashed()->findOrFail($agentId);
+        $agent->restore();
+        return response()->json(['status' => 'approved']);
     }
 }

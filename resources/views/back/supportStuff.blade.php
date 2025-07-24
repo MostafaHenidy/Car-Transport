@@ -31,178 +31,84 @@
                             <tbody>
                                 @foreach ($stuff as $agent)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
                                         <td>
+                                            {{ $loop->iteration }}</td>
+                                        <td class="@if ($agent->deleted_at != null) text-decoration-line-through @endif">
                                             <p>{{ $agent->name }}</p>
                                         </td>
-                                        <td>
+                                        <td class="@if ($agent->deleted_at != null) text-decoration-line-through @endif">
                                             <p>{{ $agent->email }}</p>
                                         </td>
-                                        <td>
+                                        <td class="@if ($agent->deleted_at != null) text-decoration-line-through @endif">
                                             <p>{{ $agent->phone }}</p>
                                         </td>
                                         <td>
+                                            @php
+                                                $isOnline = null;
+                                                if (
+                                                    \Carbon\Carbon::parse($agent->last_seen)->diffInMinutes(now()) < 3
+                                                ) {
+                                                    $isOnline = 'Online';
+                                                } else {
+                                                    $isOnline = 'Offline';
+                                                }
+                                            @endphp
                                             <span
-                                                class="badge rounded-pill text-bg-{{ $agent->status = 'acitve' ? 'success' : 'dark' }}">{{ $agent->status }}</span>
+                                                class="badge rounded-pill text-bg-{{ $isOnline == 'Online' ? 'success' : 'dark' }}">{{ $isOnline }}</span>
                                         </td>
                                         <td>
-                                            <span>{{ $agent->last_login_at->diffForHumans() }}</span>
+                                            <span>{{ \Carbon\Carbon::parse($agent->last_seen)->diffForHumans() }}</span>
                                         </td>
                                         <td>
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <button type="button" class="btn btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#viewTripModal{{ $agent->id }}">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editTripModal{{ $agent->id }}">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#deleteTripModal{{ $agent->id }}">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </div>
+                                            @if ($agent->deleted_at == null)
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button" class="btn btn-outline-secondary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deleteTripModal{{ $agent->id }}">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
+                                            @else
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="button"
+                                                        class="btn btn-outline-secondary agent-recover-btn"
+                                                        data-id="{{ $agent->id }}"> <!-- Fixed: $agent->id -->
+                                                        <i class="bi bi-person-add"></i>
+                                                    </button>
+                                                </div>
+                                            @endif
                                         </td>
                                     </tr>
-
-
-                                    <!-- View Modal -->
-                                    {{-- <div class="modal fade" id="viewTripModal{{ $trip->id }}" tabindex="-1"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content bg-dark text-white">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Trip Details</h5>
-                                                <button type="button" class="btn-close btn-close-white"
-                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <h4>{{ $trip->name }}</h4>
-                                                        <p class="text-muted">{{ $trip->pickup }}</p>
-
-                                                        <div class="mb-3">
-                                                            <h6>Routes:</h6>
-                                                            <p>{{ $trip->routes }}</p>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <h6>Transport:</h6>
-                                                            <p>{{ $trip->transport }}</p>
-                                                        </div>
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteTripModal{{ $agent->id }}" tabindex="-1"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <form action="{{ route('admin.support_stuff.DeleteAgent', $agent->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <div class="modal-content bg-dark text-white">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title text-danger">Confirm Deletion</h5>
+                                                        <button type="button" class="btn-close btn-close-white"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="mb-3">
-                                                            <h6>Price:</h6>
-                                                            <p class="text-light">
-                                                                {{ Laravel\Cashier\Cashier::formatAmount($trip->price, env('CASHIER_CURRENCY'), App::currentLocale()) }}
-                                                            </p>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <h6>Sites:</h6>
-                                                            <ul>
-                                                                @foreach (explode(',', $trip->sites) as $site)
-                                                                    <li>{{ trim($site) }}</li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </div>
+                                                    <div class="modal-body">
+                                                        <p>Are you sure you want to delete Agent
+                                                            <strong>{{ $agent->name }} </strong>?
+                                                        </p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger">Delete Agent</button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
-                                </div> --}}
-
-                                    <!-- Edit Modal -->
-                                    {{-- <div class="modal fade" id="editTripModal{{ $trip->id }}" tabindex="-1"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <form action="{{ route('admin.trips.update', $trip->id) }}" method="POST">
-                                            @csrf
-                                            @method('Patch')
-                                            <div class="modal-content bg-dark text-white">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Trip</h5>
-                                                    <button type="button" class="btn-close btn-close-white"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Name</label>
-                                                        <input type="text" class="form-control" name="name"
-                                                            value="{{ $trip->name }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Pickup Location</label>
-                                                        <input type="text" class="form-control" name="pickup"
-                                                            value="{{ $trip->pickup }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Routes</label>
-                                                        <textarea class="form-control" name="routes" rows="2">{{ $trip->routes }}</textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Transport</label>
-                                                        <input type="text" class="form-control" name="transport"
-                                                            value="{{ $trip->transport }}">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Sites (comma separated)</label>
-                                                        <textarea class="form-control" name="sites" rows="3">{{ $trip->sites }}</textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Price</label>
-                                                        <input type="text" step="0.01" class="form-control"
-                                                            name="price" value="{{ $trip->price / 100 }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success">Update Trip</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div> --}}
-
-                                    <!-- Delete Modal -->
-                                    {{-- <div class="modal fade" id="deleteTripModal{{ $trip->id }}" tabindex="-1"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <form action="{{ route('admin.trips.delete', $trip->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <div class="modal-content bg-dark text-white">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title text-danger">Confirm Deletion</h5>
-                                                    <button type="button" class="btn-close btn-close-white"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Are you sure you want to delete this trip?</p>
-                                                    <p><strong>{{ $trip->name }}</strong></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-danger">Delete Trip</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div> --}}
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>

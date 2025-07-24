@@ -106,17 +106,31 @@
                                         <td>{{ $ticket->user->name }}</td>
                                         <td>{{ ucfirst(str_replace('_', ' ', $ticket->subject)) }}</td>
                                         <td>{{ $ticket->created_at->diffForHumans() }}</td>
-                                        <td><span
-                                                class="badge bg-{{ $ticket->status === 'open' ? 'warning' : 'success' }}">{{ ucfirst($ticket->status) }}</span>
+                                        <td>
+                                            @php
+                                                $badgeColor = match ($ticket->status) {
+                                                    'open' => 'primary',
+                                                    'answered' => 'success',
+                                                    'closed' => 'secondary',
+                                                };
+                                            @endphp
+                                            <span
+                                                class="badge bg-{{ $badgeColor }}">{{ ucfirst($ticket->status) }}</span>
                                         </td>
                                         <td>
                                             @php
                                                 $agent = null;
                                                 if ($ticket->Agent_id) {
-                                                    $agent = \App\Models\SupportStuff::find($ticket->Agent_id);
+                                                    $agent = \App\Models\SupportStuff::find(
+                                                        $ticket->reply->support_stuff_id,
+                                                    );
                                                 }
                                             @endphp
-                                            {{ $agent->name }}
+                                            @if ($agent)
+                                                {{ $agent->name }}
+                                            @else
+                                                <p>No replies yet</p>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif

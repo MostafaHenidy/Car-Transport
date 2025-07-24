@@ -15,6 +15,15 @@ use Illuminate\Support\Facades\Auth;
 
 class SupportStuffController extends Controller
 {
+    function __construct()
+    {
+        // Support Tickets Management
+        $this->middleware('support_stuff', ['CheckPermission:ListAllSupportTickets'])->only('index');
+        $this->middleware('support_stuff', ['CheckPermission:ViewSupportTicket'])->only(['index', 'replyToTicket']);
+        $this->middleware('support_stuff', ['CheckPermission:UpdateTicketStatus'])->only(['index', 'showTickets']);
+        $this->middleware('support_stuff', ['CheckPermission:DeleteTicket'])->only(['index', 'updateTicketStatus']);
+        $this->middleware('support_stuff', ['CheckPermission:ReplyToSupportTicket'])->only(['index', 'deleteTicket']);
+    }
     public function index()
     {
         return view('supportStuff.index', [
@@ -57,5 +66,10 @@ class SupportStuffController extends Controller
         $ticket->status = $request->status;
         $ticket->save();
         return redirect()->back()->with('success', 'Ticket Closed');
+    }
+    public function deleteTicket(supportTicket $ticket)
+    {
+        $ticket->delete();
+        return redirect()->back()->with(['status' => 'Ticket deleted successfully!']);
     }
 }
