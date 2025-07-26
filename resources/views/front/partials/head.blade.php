@@ -9,7 +9,7 @@
     <meta name="HandheldFriendly" content="true">
     <title>Capodanno</title>
     <link rel="stylesheet" href="{{ asset('assets-front') }}/css/theme.min.css">
-
+    @livewireStyles
     <style>
         /* inter-300 - latin */
         @font-face {

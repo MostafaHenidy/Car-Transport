@@ -1,6 +1,6 @@
 <!-- Bootstrap JS (use only one version, keep the latest bundle version) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+@livewireScripts
 <!-- AOS JS -->
 <script src="{{ asset('assets-front') }}/js/aos.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
